@@ -23,13 +23,13 @@ allFilesThere <- TRUE
 ifelse(file.exists(here("data/portsmouthLeaders2018.xlsx")),
        "Portsmouth 2018 File Found :)",
        {allFilesThere <- FALSE
-         writeLines("Portsmouth 2018 File not Found: Please place 'portsmouthLeaders2018.xlsx' in the 'data' directory and knit this document again")})
+       "Portsmouth 2018 File not Found: Please place 'portsmouthLeaders2018.xlsx' in the 'data' directory and knit this document again"})
 
 ### Is there a (correctly named) Portsmouth-2019 file (in the right place) --------------------
 ifelse(file.exists(here("data/portsmouthLeaders2019.xlsx")),
        "Portsmouth 2019 File Found :)",
        {allFilesThere <- FALSE
-         writeLines("Portsmouth 2019 File not Found: Please place 'portsmouthLeaders2019.xlsx' in the 'data' directory and knit this document again")})
+         "Portsmouth 2019 File not Found: Please place 'portsmouthLeaders2019.xlsx' in the 'data' directory and knit this document again"})
 ```
 
 ```{r writeRDS2}

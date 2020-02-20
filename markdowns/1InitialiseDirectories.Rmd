@@ -22,35 +22,19 @@ A note about `here()`: It's very useful for working out the functional root of a
 dr_here()
 ```
 
-## Create directory structure (things not pushed to git)
+## Create directories
 
+(these folders don't get pushed to git)
+
+### data 
 ```{r structureCreate}
 !if("data" %in% dir(here())) dir.create("data")
 ```
 
-## Look for excel files
+## data/progressRdats
 
-```{r excelFilePlaces}
-allFilesThere <- TRUE
-### Is there a (correctly named) Portsmouth-2018 file (in the right place) --------------------
-ifelse(file.exists(here("data/portsmouthLeaders2018.xlsx")),
-       "Portsmouth 2018 File Found :)",
-       {allFilesThere <- FALSE
-         "Portsmouth 2018 File not Found: Please place 'portsmouthLeaders2018.xlsx' in the 'data' directory and knit this document again"})
-
-### Is there a (correctly named) Portsmouth-2019 file (in the right place) --------------------
-ifelse(file.exists(here("data/portsmouthLeaders2019.xlsx")),
-       "Portsmouth 2019 File Found :)",
-       {allFilesThere <- FALSE
-         "Portsmouth 2019 File not Found: Please place 'portsmouthLeaders2019.xlsx' in the 'data' directory and knit this document again"})
-```
-
-## save Progress Rdat
 ```{r progressRdat}
 # Create 'progressRdats' if required
 !if(dir.exists(here("data/progressRdats"))) dir.create(here("data/progressRdats"))
-
-saveRDS(allFilesThere, here("data/progressRdats/1.rdat"))
-readRDS(here("data/progressRdats/1.rdat"))
 ```
 

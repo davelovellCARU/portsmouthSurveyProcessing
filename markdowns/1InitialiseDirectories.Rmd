@@ -9,9 +9,40 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r libraries, message = FALSE}
+```{r libraries, message = FALSE, warning = FALSE}
 # Libraries ---------
 require("here")
 ```
 
-`r here()`
+We are here: `r here()`
+
+A note about `here()`: It's very useful for working out the functional root of a project or repo. We can use `dr_here()` to get the reasoning for why `here()` returns what it does:
+
+```{r showHere}
+dr_here()
+```
+
+## Create directory structure (things not pushed to git)
+
+```{r structureCreate}
+!if("data" %in% dir(here())) dir.create("data")
+```
+
+## Look for excel files
+
+```{r excelFilePlaces}
+### Is there a (correctly named) Portsmouth-2018 file (in the right place) --------------------
+ifelse(file.exists(here("data/portsmouthLeaders2018.xlsx")),
+       "Portsmouth 2018 File Found :)",
+       {
+       "Uh oh: Portsmouth 2018 File not Found :("
+        dir.choose() 
+        })
+
+### Is there a (correctly named) Portsmouth-2019 file (in the right place) --------------------
+ifelse(file.exists(here("data/portsmouthLeaders2019.xlsx")),
+       "Portsmouth 2019 File Found :)",
+       "Uh oh: Portsmouth 2019 File not Found :(")
+```
+
+

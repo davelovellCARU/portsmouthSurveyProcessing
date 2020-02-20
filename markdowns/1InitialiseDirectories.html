@@ -371,8 +371,32 @@ summary {
 
 <pre class="r"><code># Libraries ---------
 require(&quot;here&quot;)</code></pre>
-<pre><code>## Warning: package &#39;here&#39; was built under R version 3.6.2</code></pre>
-<p>C:/Users/David.Lovell/Documents/GitHub/portsmouthSurveyProcessing</p>
+<p>We are here: C:/Users/David.Lovell/Documents/GitHub/portsmouthSurveyProcessing</p>
+<p>A note about <code>here()</code>: It’s very useful for working out the functional root of a project or repo. We can use <code>dr_here()</code> to get the reasoning for why <code>here()</code> returns what it does:</p>
+<pre class="r"><code>dr_here()</code></pre>
+<pre><code>## here() starts at C:/Users/David.Lovell/Documents/GitHub/portsmouthSurveyProcessing, because it contains a directory `.git`</code></pre>
+<div id="create-directory-structure-things-not-pushed-to-git" class="section level2">
+<h2>Create directory structure (things not pushed to git)</h2>
+<pre class="r"><code>!if(&quot;data&quot; %in% dir(here())) dir.create(&quot;data&quot;)</code></pre>
+<pre><code>## Warning in dir.create(&quot;data&quot;): &#39;data&#39; already exists</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+</div>
+<div id="look-for-excel-files" class="section level2">
+<h2>Look for excel files</h2>
+<pre class="r"><code>### Is there a (correctly named) Portsmouth-2018 file (in the right place) --------------------
+ifelse(file.exists(here(&quot;data/portsmouthLeaders2018.xlsx&quot;)),
+       &quot;Portsmouth 2018 File Found :)&quot;,
+       {
+       &quot;Uh oh: Portsmouth 2018 File not Found :(&quot;
+        dir.choose() 
+        })</code></pre>
+<pre><code>## [1] &quot;Portsmouth 2018 File Found :)&quot;</code></pre>
+<pre class="r"><code>### Is there a (correctly named) Portsmouth-2019 file (in the right place) --------------------
+ifelse(file.exists(here(&quot;data/portsmouthLeaders2019.xlsx&quot;)),
+       &quot;Portsmouth 2019 File Found :)&quot;,
+       &quot;Uh oh: Portsmouth 2019 File not Found :(&quot;)</code></pre>
+<pre><code>## [1] &quot;Portsmouth 2019 File Found :)&quot;</code></pre>
+</div>
 
 
 

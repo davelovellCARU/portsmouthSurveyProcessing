@@ -36,10 +36,14 @@ render(here("markdowns/1InitialiseDirectories.Rmd"))
 
 #### Aim:
 
+```{r renderMarkdown2, results = "hide", message=FALSE}
+render(here("markdowns/2checkData.Rmd"))
+```
+
 Make sure that the data exists
 
 #### Result:
-```{r renderMarkdowns}
+```{r readRdat2}
 if(readRDS(here("data/progressRdats/2.rdat"))){
   continue = TRUE
   writeLines("2checkData.Rmd successfully rendered - the files are where they need to be")

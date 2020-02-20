@@ -47,6 +47,9 @@ ifelse(file.exists(here("data/portsmouthLeaders2019.xlsx")),
 
 ## save Progress Rdat
 ```{r progressRdat}
+# Create 'progressRdats' if required
+!if(dir.exists(here("data/progressRdats"))) dir.create(here("data/progressRdats"))
+
 saveRDS(allFilesThere, here("data/progressRdats/1.rdat"))
 readRDS(here("data/progressRdats/1.rdat"))
 ```

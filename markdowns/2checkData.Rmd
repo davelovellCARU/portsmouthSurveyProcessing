@@ -1,0 +1,16 @@
+---
+title: "checkData"
+author: "Dave Lovell"
+date: "20/02/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r libraries2}
+require("here")
+```
+
+## 

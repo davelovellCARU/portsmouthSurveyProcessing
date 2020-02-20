@@ -1,0 +1,34 @@
+---
+title: "Data Processing Overview"
+author: "Dave Lovell"
+date: "20/02/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r libraries, message = FALSE}
+require("here")
+require("rmarkdown")
+```
+
+Hello. If you're looking at this from inside RStudio, just hit `Ctrl+Shift+K` to knit the html. 
+
+We are here: `r here()`
+
+## Render Markdowns Until an error is encountered
+
+```{r renderMarkdown1, results = "hide"}
+render(here("markdowns/1InitialiseDirectories.Rmd"))
+```
+
+```{r renderMarkdowns}
+if(readRDS(here("data/progressRdats/1.rdat"))){
+  continue = TRUE
+  writeLines("1IntitialiseDirectories.Rmd successfully rendered - directory structure created and files in place")
+} else {
+  writeLines("1InitialiseDirectories.Rmd succesfully rendered, but unable to continue (probably because \"portsmouthLeaders2018\" or \"portsmouthLeaders2019\" are not in the \"data\" directory. See \"markdowns\\1InitialiseDirectories.html\" for details")
+}
+```

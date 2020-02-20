@@ -2,14 +2,16 @@
 title: "Data Processing Overview"
 author: "Dave Lovell"
 date: "20/02/2020"
-output: html_document
+output:
+  html_document:
+    code_folding: hide
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r libraries, message = FALSE}
+```{r libraries, message = FALSE, warnings = FALSE}
 require("here")
 require("rmarkdown")
 ```
@@ -20,11 +22,18 @@ We are here: `r here()`
 
 ## Render Markdowns Until an error is encountered
 
+### Render Markdown 1
+
+#### Aim:
+
+Create folder structure (if necessary) and check for appropriate data
+
 ```{r renderMarkdown1, results = "hide", message=FALSE}
 render(here("markdowns/1InitialiseDirectories.Rmd"))
 ```
 
-```{r renderMarkdowns, collapse = TRUE}
+#### Result:
+```{r renderMarkdowns}
 if(readRDS(here("data/progressRdats/1.rdat"))){
   continue = TRUE
   writeLines("1IntitialiseDirectories.Rmd successfully rendered - directory structure created and files in place")

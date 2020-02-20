@@ -22,22 +22,29 @@ We are here: `r here()`
 
 ## Render Markdowns Until an error is encountered
 
-### Render Markdown 1
+### Render Markdown 1 (Initialise Directories)
 
 #### Aim:
 
-Create folder structure (if necessary) and check for appropriate data
+Create folder structure (if necessary)
 
 ```{r renderMarkdown1, results = "hide", message=FALSE}
 render(here("markdowns/1InitialiseDirectories.Rmd"))
 ```
 
+### Render Markdown 2 (Check Data)
+
+#### Aim:
+
+Make sure that the data exists
+
 #### Result:
 ```{r renderMarkdowns}
-if(readRDS(here("data/progressRdats/1.rdat"))){
+if(readRDS(here("data/progressRdats/2.rdat"))){
   continue = TRUE
-  writeLines("1IntitialiseDirectories.Rmd successfully rendered - directory structure created and files in place")
+  writeLines("2checkData.Rmd successfully rendered - the files are where they need to be")
 } else {
-  writeLines("1InitialiseDirectories.Rmd succesfully rendered, but unable to continue (probably because \"portsmouthLeaders2018\" or \"portsmouthLeaders2019\" are not in the \"data\" directory. See \"markdowns\\1InitialiseDirectories.html\" for details")
+  continue = FALSE
+  writeLines("2checkData.Rmd succesfully rendered, but unable to continue. Very likely that \"portsmouthLeaders2018\" or \"portsmouthLeaders2019\" are not in the \"data\" directory. See \"markdowns\\2checkData.html\" for details")
 }
 ```

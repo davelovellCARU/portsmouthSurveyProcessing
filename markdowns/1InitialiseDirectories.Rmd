@@ -5,11 +5,11 @@ date: "20/02/2020"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
+```{r setup1, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r libraries, message = FALSE, warning = FALSE}
+```{r libraries1, message = FALSE, warning = FALSE}
 # Libraries ---------
 require("here")
 ```
@@ -31,18 +31,23 @@ dr_here()
 ## Look for excel files
 
 ```{r excelFilePlaces}
+allFilesThere <- TRUE
 ### Is there a (correctly named) Portsmouth-2018 file (in the right place) --------------------
 ifelse(file.exists(here("data/portsmouthLeaders2018.xlsx")),
        "Portsmouth 2018 File Found :)",
-       {
-       "Uh oh: Portsmouth 2018 File not Found :("
-        dir.choose() 
-        })
+       {allFilesThere <- FALSE
+         "Portsmouth 2018 File not Found: Please place 'portsmouthLeaders2018.xlsx' in the 'data' directory and knit this document again"})
 
 ### Is there a (correctly named) Portsmouth-2019 file (in the right place) --------------------
 ifelse(file.exists(here("data/portsmouthLeaders2019.xlsx")),
        "Portsmouth 2019 File Found :)",
-       "Uh oh: Portsmouth 2019 File not Found :(")
+       {allFilesThere <- FALSE
+         "Portsmouth 2019 File not Found: Please place 'portsmouthLeaders2019.xlsx' in the 'data' directory and knit this document again"})
 ```
 
+## save Progress Rdat
+```{r progressRdat}
+saveRDS(allFilesThere, here("data/progressRdats/1.rdat"))
+readRDS(here("data/progressRdats/1.rdat"))
+```
 

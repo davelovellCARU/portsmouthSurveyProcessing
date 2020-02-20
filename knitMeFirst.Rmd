@@ -49,6 +49,6 @@ if(readRDS(here("data/progressRdats/2.rdat"))){
   writeLines("2checkData.Rmd successfully rendered - the files are where they need to be")
 } else {
   continue = FALSE
-  writeLines("2checkData.Rmd succesfully rendered, but unable to continue. Very likely that \"portsmouthLeaders2018\" or \"portsmouthLeaders2019\" are not in the \"data\" directory. See \"markdowns\\2checkData.html\" for details")
+  writeLines("2checkData.Rmd succesfully rendered, but unable to continue. \"portsmouthLeaders2018\" or \"portsmouthLeaders2019\" were not in the \"data\" directory and a connection to the O drive could not be established. See \"markdowns\\2checkData.html\" for details")
 }
 ```

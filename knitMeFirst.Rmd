@@ -20,11 +20,11 @@ We are here: `r here()`
 
 ## Render Markdowns Until an error is encountered
 
-```{r renderMarkdown1, results = "hide"}
+```{r renderMarkdown1, results = "hide", message=FALSE}
 render(here("markdowns/1InitialiseDirectories.Rmd"))
 ```
 
-```{r renderMarkdowns}
+```{r renderMarkdowns, collapse = TRUE}
 if(readRDS(here("data/progressRdats/1.rdat"))){
   continue = TRUE
   writeLines("1IntitialiseDirectories.Rmd successfully rendered - directory structure created and files in place")

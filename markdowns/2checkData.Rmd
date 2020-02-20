@@ -19,17 +19,34 @@ require("here")
 
 ```{r excelFilePlaces}
 allFilesThere <- TRUE
+
 ### Is there a (correctly named) Portsmouth-2018 file (in the right place) --------------------
 ifelse(file.exists(here("data/portsmouthLeaders2018.xlsx")),
        "Portsmouth 2018 File Found :)",
-       {allFilesThere <- FALSE
-       "Portsmouth 2018 File not Found: Please place 'portsmouthLeaders2018.xlsx' in the 'data' directory and knit this document again"})
+       {
+         # If file exists on O drive
+         if(file.exists("O:\\WCC\\Learning and Development\\Research\\PROJECT - Portsmouth 2019 onwards\\Strand 2 - Evaluation of Pioneer Programme\\Quantitative\\Data\\portsmouthLeaders2018.xlsx")){
+           # Copy file from O Drive
+           file.copy(from = "O:\\WCC\\Learning and Development\\Research\\PROJECT - Portsmouth 2019 onwards\\Strand 2 - Evaluation of Pioneer Programme\\Quantitative\\Data\\portsmouthLeaders2018.xlsx",
+                     to = here("data"))
+           "Portsmouth 2018 succesfully copied from O drive"
+         } else {
+         allFilesThere <- FALSE
+       "Portsmouth 2018 File not found and O:// drive not available: Please place 'portsmouthLeaders2018.xlsx' in the 'data' directory and knit this document again"}})
 
 ### Is there a (correctly named) Portsmouth-2019 file (in the right place) --------------------
 ifelse(file.exists(here("data/portsmouthLeaders2019.xlsx")),
        "Portsmouth 2019 File Found :)",
-       {allFilesThere <- FALSE
-         "Portsmouth 2019 File not Found: Please place 'portsmouthLeaders2019.xlsx' in the 'data' directory and knit this document again"})
+       {
+         # If file exists on O drive
+         if(file.exists("O:\\WCC\\Learning and Development\\Research\\PROJECT - Portsmouth 2019 onwards\\Strand 2 - Evaluation of Pioneer Programme\\Quantitative\\Data\\portsmouthLeaders2019.xlsx")){
+           # Copy file from O Drive
+           file.copy(from = "O:\\WCC\\Learning and Development\\Research\\PROJECT - Portsmouth 2019 onwards\\Strand 2 - Evaluation of Pioneer Programme\\Quantitative\\Data\\portsmouthLeaders2019.xlsx",
+                     to = here("data"))
+           "Portsmouth 2019 succesfully copied from O drive"
+         } else {
+         allFilesThere <- FALSE
+       "Portsmouth 2019 File not found and O:// drive not available: Please place 'portsmouthLeaders2019.xlsx' in the 'data' directory and knit this document again"}})
 ```
 
 ```{r writeRDS2}

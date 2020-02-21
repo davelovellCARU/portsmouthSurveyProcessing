@@ -65,6 +65,10 @@ Only 'sacraments' and 'leadership' (hopefully!). These are the sections in which
 
 ## Names investigation
 
+### Are the question names consistent?
+
+Are there any names in the 2018 data that don't come up in the corresponding sheet of the 2019 data, or vice-versa?
+
 ```{r namesLook}
 excelSheet %>% 
   mutate(badnames = map2(data2018, data2019, 
@@ -78,3 +82,108 @@ excelSheet %>%
   {pull(., badnames) %>% 
       sapply(print)}
 ```
+
+There are some, but they represent the additional rows in the 'leadership' and 'sacraments' sheets'
+
+I've just realised that if we're not careful, read_excel will assign non-matching integers to the ends of identical questions which will effectively swap the rows around between the two tranches. I'll fix that now in Excel (the shame!).
+
+`fixInExcel.exe running....`
+
+Good good good, that's all fixed and everything in nice and explicit.
+
+### Are the fresh expression names consistent?
+
+#### fxC that don't appear in every sheet of 2018 data
+
+```{r fxcNameCheck2018}
+excelSheet %>% 
+  pull(data2018) %>% 
+  sapply(function(x) pull(x, `Fresh expression name`)) -> 
+  allNames
+
+table(unlist(allNames)) -> namesTable2018
+
+namesTable2018[namesTable2018 != median(namesTable2018)]
+```
+
+I think we should keep these responses - see no reason to get rid of partials.
+
+#### fxC that don't appear in every sheet of 2019
+
+```{r fxcNameCheck2019}
+
+excelSheet %>% 
+  pull(data2019) %>% 
+  sapply(function(x) pull(x, `Fresh expression name`)) -> 
+  allNames
+
+table(unlist(allNames)) -> namesTable2019
+
+namesTable2019[namesTable2019 != median(namesTable2019)]
+```
+
+None of those. Nice.
+
+## Concatenate Tibbles
+
+Get a big list of all the names from each year:
+
+```{r getNameLists}
+# Getting names from names, don't freak out ------------------------
+names2018 <- names(namesTable2018)
+names2019 <- names(namesTable2019)
+```
+
+Do some big joins. Finally going to use purrr's 'reduce' in the wild!
+
+```{r bigTimeJoinery}
+#2018 tibble
+append(list(tibble(fxc = names2018)),
+  excelSheet %>% 
+  pull(data2018) %>% 
+    sapply(function(x) rename(x, "fxc" = "Fresh expression name"))) %>% 
+  reduce(~{left_join(.x,.y, by = "fxc")}) ->
+  leaderResponse2018
+
+append(list(tibble(fxc = names2019)),
+  excelSheet %>% 
+  pull(data2019) %>% 
+    sapply(function(x) rename(x, "fxc" = "Fresh expression name"))) %>% 
+  reduce(~{left_join(.x,.y, by = "fxc")}) ->
+  leaderResponse2019
+
+head(leaderResponse2018[,1:6], 10)
+head(leaderResponse2019[,1:6], 10)
+```
+
+## Concatenate concatenated tibbles into single tidy tibble
+
+```{r superTidy}
+leaderResponse2018 %<>% mutate(tranche = factor(2018, 
+                                                levels = c(2018,2019,2020),
+                                                ordered = TRUE))
+leaderResponse2019 %<>% mutate(tranche = factor(2019, 
+                                                levels = c(2018,2019,2020),
+                                                ordered = TRUE)) 
+
+sharedNames = intersect(names(leaderResponse2018), names(leaderResponse2019))
+
+notIn2019 = names(leaderResponse2018)[!(names(leaderResponse2018) %in% sharedNames)]
+notIn2018 = names(leaderResponse2019)[!(names(leaderResponse2019) %in% sharedNames)]
+
+addRowsMatrix <- matrix(NA, nrow = nrow(leaderResponse2018), ncol = length(notIn2018))
+colnames(addRowsMatrix) = notIn2018
+
+addRowsMatrix %<>% as_tibble
+leaderResponse2018 %<>% cbind(addRowsMatrix)
+
+addRowsMatrix <- matrix(NA, nrow = nrow(leaderResponse2019), ncol = length(notIn2019))
+colnames(addRowsMatrix) = notIn2019
+addRowsMatrix %<>% as_tibble
+
+leaderResponse2019 %<>% cbind(addRowsMatrix)
+
+rbind(leaderResponse2018, leaderResponse2019) ->
+  leaderResponses
+```
+

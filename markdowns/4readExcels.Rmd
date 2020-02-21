@@ -14,6 +14,7 @@ library("here")
 library("readxl")
 library("dplyr")
 library("purrr")
+library("magrittr")
 ```
 
 ## Create tibble with sheet names and data selections
@@ -21,54 +22,59 @@ library("purrr")
 ```{r excelSheet}
 excelSheet <- 
   tibble(sheetNames = c("basic info", "motivations", "leadership", "numbers",
-                        "sacraments", "worship community", "stewardship", 
-                        "three self", "disciple evangelism", "tradition",
-                        "description", "geography", "mission", "engage with bible"),
-         field2018 = c(NA,
-                       paste0("A2:",
-                              c("N54", "R54", "AU54", "O54", "AC54", "L52",
-                                "Z54", "O54", "O59", "V59" , "O59", "N59", "J54"))),
-         field2019 = c(paste0("A2:",
-                              c("Q52", "J52", "AD52", "L52", "K52", "AG52")), 
-                       NA, 
-                       paste0("A2:",
-                              c("AD52", "Q52", "L52", "V52", "O52", "N52", "L52"))))
+                        "tradition", "description", "geography", "mission", 
+                        "engage with bible", "worship community", "sacraments",
+                        "three self", "stewardship", "disciple evangelism")) %>%
+  mutate(skipRows = sheetNames %in% c("motivations", "tradition",
+                                      "worship community", "three self",
+                                      "disciple evangelism") %>% 
+           as.numeric)
 
 excelSheet
 ```
 
 ## Do a two 'readxl's for each row
 
-```{r readExcels}
+```{r readExcels, warning = FALSE}
 
-excelSheet %>%
+excelSheet %<>%
   mutate(
-    data2018 = map2(sheetNames, field2018,
+    data2018 = map2(sheetNames, skipRows,
                     ~ {read_excel(
                        here("data/portsmouthLeaders2018.xlsx"),
                        sheet = .x,
-                       range = 
-                         {
-                         if(is.na(.y))
-                         {
-                           NULL
-                         } else {
-                           .y
-                         }
-                         })}),
-    data2019 = map2(sheetNames, field2019,
+                       skip = .y)}),
+    data2019 = map2(sheetNames, skipRows,
                     ~ {read_excel(
                        here("data/portsmouthLeaders2019.xlsx"),
                        sheet = .x,
-                       range = 
-                         {
-                         if(is.na(.y))
-                         {
-                           NULL
-                         } else {
-                           .y
-                         }})}))
+                       skip = .y)}))
 
 excelSheet
+```
 
+## Dimension investigation
+
+Which of these tibbles have inconsitent dimensions between years?
+
+```{r lookDims}
+filter(excelSheet, sapply(data2018,ncol) != sapply(data2019,ncol))
+```
+
+Only 'sacraments' and 'leadership' (hopefully!). These are the sections in which questions were added between 2018 and 2019. 
+
+## Names investigation
+
+```{r namesLook}
+excelSheet %>% 
+  mutate(badnames = map2(data2018, data2019, 
+                        ~ {
+                          c(names(.x)[!(names(.x) %in% intersect(names(.x),names(.y)))],
+                            names(.y)[!(names(.y) %in% intersect(names(.x),names(.y)))])
+                        })) %>% 
+  filter(sapply(badnames,length) > 1) %>% 
+  select(sheetNames, badnames) %>% 
+  mutate(what = sapply(badnames,toString)) %T>%
+  {pull(., badnames) %>% 
+      sapply(print)}
 ```

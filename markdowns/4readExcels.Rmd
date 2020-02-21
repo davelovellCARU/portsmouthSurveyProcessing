@@ -13,6 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library("here")
 library("readxl")
 library("dplyr")
+library("purrr")
 ```
 
 ## Create tibble with sheet names and data selections
@@ -32,4 +33,42 @@ excelSheet <-
                        NA, 
                        paste0("A2:",
                               c("AD52", "Q52", "L52", "V52", "O52", "N52", "L52"))))
+
+excelSheet
+```
+
+## Do a two 'readxl's for each row
+
+```{r readExcels}
+
+excelSheet %>%
+  mutate(
+    data2018 = map2(sheetNames, field2018,
+                    ~ {read_excel(
+                       here("data/portsmouthLeaders2018.xlsx"),
+                       sheet = .x,
+                       range = 
+                         {
+                         if(is.na(.y))
+                         {
+                           NULL
+                         } else {
+                           .y
+                         }
+                         })}),
+    data2019 = map2(sheetNames, field2019,
+                    ~ {read_excel(
+                       here("data/portsmouthLeaders2019.xlsx"),
+                       sheet = .x,
+                       range = 
+                         {
+                         if(is.na(.y))
+                         {
+                           NULL
+                         } else {
+                           .y
+                         }})}))
+
+excelSheet
+
 ```

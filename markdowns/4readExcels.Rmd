@@ -1,0 +1,35 @@
+---
+title: "readExcels"
+author: "Dave Lovell"
+date: "21/02/2020"
+output: html_document
+---
+
+```{r setup3, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r libraries3, message = FALSE}
+library("here")
+library("readxl")
+library("dplyr")
+```
+
+## Create tibble with sheet names and data selections
+
+```{r excelSheet}
+excelSheet <- 
+  tibble(sheetNames = c("basic info", "motivations", "leadership", "numbers",
+                        "sacraments", "worship community", "stewardship", 
+                        "three self", "disciple evangelism", "tradition",
+                        "description", "geography", "mission", "engage with bible"),
+         field2018 = c(NA,
+                       paste0("A2:",
+                              c("N54", "R54", "AU54", "O54", "AC54", "L52",
+                                "Z54", "O54", "O59", "V59" , "O59", "N59", "J54"))),
+         field2019 = c(paste0("A2:",
+                              c("Q52", "J52", "AD52", "L52", "K52", "AG52")), 
+                       NA, 
+                       paste0("A2:",
+                              c("AD52", "Q52", "L52", "V52", "O52", "N52", "L52"))))
+```

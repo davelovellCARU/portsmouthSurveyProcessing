@@ -14,6 +14,8 @@ require("here")
 require("dplyr")
 require("magrittr")
 require("tidyr")
+require("purrr")
+require("stringr")
 ```
 ## Clean the Data
 
@@ -277,7 +279,7 @@ saveRDS(tibble(oldNames,
 
 ### Logicals
 
-Are these fields all safe to interpret as logicals?
+Many sections of the survey can be intepreted as logicals. Test this:
 
 ```{r findLogicals}
 responses %>% 
@@ -324,4 +326,96 @@ responses %<>%
          -contains("notAtThisStage")),
          ~ !is.na(.))
 ```
+
+### Numerics
+
+Likewise, the 'num' section can be intepreted as numerical:
+
+```{r make testNumericals}
+responses %>%
+  mutate_all(as.character) %>% 
+  select(contains("num_")) %>% 
+  pivot_longer(everything()) %>% 
+  pull(value) -> numVals
+
+numVals[!is.na(numVals)&str_detect(numVals,"\\D")]
+
+```
+U hate 2 c it. What's to be done about these? I'm goint to make them all into NAs, except the two with numbers in, which I will extract the numbers from.
+
+```{r mutateBadNums}
+responses %<>% 
+  mutate_at(vars(contains("num_")),
+            function(x){
+              as.character(x) %>% 
+                map_dbl(~ {
+                  if(is.na(.)|str_detect(.,"\\d",negate = TRUE)) return(NA)
+                  else{
+                    tmp <- str_extract(.,"\\d+") %>% as.numeric
+                    return(tmp)}
+                    
+                    
+                })})
+
+```
+
+### Factors
+
+Non-ordered factors are easy:
+
+```{r makeFactors}
+responses %<>%
+  mutate_at(c("info_deanery", "lead_gender", "df_denominationalFeatures",
+              "bui_type", "bui_ownership", "bui_license", "bui_legalStatus",
+              "mis_dynamic", "sac_whoPresidesCommunion", "ste_responsibleDecisions" 
+              ), as.factor)
+```
+
+Ordered factors take a little longer:
+
+
+```{r makeOrderedFactors}
+responses %<>%
+  mutate(info_frequency = 
+           info_frequency %>% 
+           factor(levels = c("Weekly", "Fortnightly", "Monthly"),
+                  ordered = TRUE),
+         info_days = 
+           info_days %>% 
+           factor(levels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"),
+                  ordered = TRUE),
+         lead_payStatus = 
+           lead_payStatus %>% 
+           factor(levels = c("Voluntary", "Locally paid", "Stipendiary"),
+                  ordered = TRUE),
+         lead_time = 
+           lead_time %>% 
+           factor(levels = c("Spare Time", "Part Time", "Full Time"),
+                  ordered = TRUE),
+         dive_typicality = 
+           dive_typicality %>% 
+           factor(levels = c("Slightly", "Moderately", "Mainly", "Totally"),
+                  ordered = TRUE), 
+         dive_diversity = 
+           dive_diversity %>%
+           replace("Noone with ethnic background at present",
+                   "One ethnic background") %>% 
+           replace("None at present",
+                   "One ethnic background") %>% 
+           factor(levels = c("Prefer not to say", "One ethnic background",
+                             "A few ethnic backgrounds",
+                             "Wide diversity of ethnic backgrounds")))
+
+```
+
+```{r limitedResponses}
+responses %>% 
+  select_if(negate(is.logical)) %>%
+  select_if(negate(is.numeric)) %>% 
+  select_if(negate(is.factor)) %>% 
+  select_if(~ length(unique(.)) < 10) %>% View
+  names()
+```
+
+
 

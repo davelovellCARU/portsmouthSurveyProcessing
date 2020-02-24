@@ -259,7 +259,7 @@ responses %<>%
 "lead_email2" = "lead_Email address 2", 
 "lead_phone2" = "lead_Phone number 2", 
 "lead_name3" = "lead_Name of leader 3", 
-"lead_email2" = "lead_Email address 3", 
+"lead_email3" = "lead_Email address 3", 
 "lead_phone3" = "lead_Phone number 3")
 ```
 

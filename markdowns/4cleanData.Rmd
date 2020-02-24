@@ -287,11 +287,41 @@ responses %>%
          contains("trad_"),
          contains("desc_"),
          contains("geog_"),
-         -contains("Other")) %>% 
+         contains("bib_"),
+         contains("wor_"),
+         contains("com_"),
+         contains("ts_"),
+         contains("sf_"),
+         contains("sg_"),
+         contains("sr_"),
+         contains("dis_"),
+         contains("eva_"),
+         -contains("other"),
+         -contains("notAtThisStage")) %>% 
   pivot_longer(everything()) %>% 
   pull(value) %>% 
-  unique
+  unique 
+```
+These fields can all be interpreted as logicals with `!is.na(x)`.
 
-
+```{r makeLogicals}
+responses %<>% 
+  mutate_at(vars(contains("mot_"),
+         contains("train_"),
+         contains("trad_"),
+         contains("desc_"),
+         contains("geog_"),
+         contains("bib_"),
+         contains("wor_"),
+         contains("com_"),
+         contains("ts_"),
+         contains("sf_"),
+         contains("sg_"),
+         contains("sr_"),
+         contains("dis_"),
+         contains("eva_"),
+         -contains("other"),
+         -contains("notAtThisStage")),
+         ~ !is.na(.))
 ```
 

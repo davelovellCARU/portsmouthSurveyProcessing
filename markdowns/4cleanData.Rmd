@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r libraries4}
+```{r libraries4, message = FALSE, warning = FALSE}
 require(here)
 require(dplyr)
 ```
@@ -22,7 +22,8 @@ Make it real good yeah.
 
 ```{r readUnclean}
 responses <- 
-  readRDS(here("data/generalRdats/leaderResponesUnclean.rdat"))
+  readRDS(here("data/generalRdats/leaderResponsesUnclean.rdat"))
 
 responses
 ```
+

@@ -12,6 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r libraries4, message = FALSE, warning = FALSE}
 require(here)
 require(dplyr)
+require(magrittr)
 ```
 ## Clean the Data
 
@@ -41,8 +42,7 @@ NB put the below together with `paste0(" = \"", names(responses),"\", ") %>% wri
 #### Rename
 ```{r renameCols}
 responses %<>%
-  rename(
-"info_stillMeeting" = "info_Is this fresh expression/church plant still meeting?", 
+  rename("info_stillMeeting" = "info_Is this fresh expression/church plant still meeting?", 
 "fxc" = "fxc", 
 "info_deanery" = "info_Deanery", 
 "info_sendingChurch" = "info_Name of Sending Church", 
@@ -235,7 +235,7 @@ responses %<>%
 "ste_givers" = "ste_How many people contribute financially to the Fresh Expression?", 
 "ste_plannedGivers" = "ste_Of those people detailed at point 3, how many are planned givers (ie in a committed way each week/month to the fresh expression)", 
 "ste_fxcExclusively" = "ste_Of those planned givers, how many are only giving to the fresh expression and how many are existing parish planned givers?", 
-"" = "ste_How much financial support is there from  the main congregation members?", 
+"ste_supportFromCongregation" = "ste_How much financial support is there from  the main congregation members?", 
 "ste_opportunitiesCommunicate" = "ste_The intended message is that people can participate at no cost while there being opportunities to give.  What opportunities are there to give and how are these communicated?", 
 "ste_howBuildStewardship" = "ste_What steps have been taken already to build in stewardship principles in terms of time, talents and money into the fresh expression activities?", 
 "ste_plansSustainibility" = "ste_What plans and strategy is there to ensure financial sustainability over the next 2-3 years and 3-5 years?", 

@@ -35,7 +35,7 @@ excelSheet
 
 ## Do a two 'readxl's for each row
 
-```{r readExcels, warning = FALSE, cache = TRUE}
+```{r readExcels, warning = FALSE}
 
 excelSheet %<>%
   mutate(
@@ -83,9 +83,7 @@ excelSheet %<>%
               ~ map2(.,abr,
                      ~ rename_at(.x,
                                  vars(-contains("Fresh expression name")),
-                                  function(m) paste0(unique(.y),m)) %>%
-  ### Add a 'sheet' column to each tibble          ::::::::::::
-              mutate(sheet = .y)))
+                                  function(m) paste0(unique(.y),m))))
 
 excelSheet$data2018[[1]]
 ```
@@ -223,6 +221,15 @@ leaderResponse2019 %<>% cbind(addRowsMatrix)
 rbind(leaderResponse2018, leaderResponse2019) ->
   leaderResponses
 
-head(leaderResponses)
+nrow(leaderResponses)
+ncol(leaderResponses)
 ```
+
+## Write this data to an rdat
+
+```{r saveRDS3}
+saveRDS(leaderResponses,here("data/generalRdats/leaderResponsesUnclean.rdat"))
+```
+
+
 

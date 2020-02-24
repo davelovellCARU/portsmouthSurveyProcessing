@@ -52,3 +52,13 @@ if(readRDS(here("data/progressRdats/2.rdat"))){
   writeLines("2checkData.Rmd succesfully rendered, but unable to continue. \"portsmouthLeaders2018\" or \"portsmouthLeaders2019\" were not in the \"data\" directory and a connection to the O drive could not be established. See \"markdowns\\2checkData.html\" for details")
 }
 ```
+
+### Render Markdown 3 (Read excels)
+
+#### Aim:
+
+Read the .xlsx files, concatenate them into a single tibble and save it as `data/generalRdats/leaderResponsesUnclean.rdat"
+
+```{r renderMarkdown3, results = "hide", message=FALSE}
+render(here("markdowns/3readExcels.Rmd"))
+```

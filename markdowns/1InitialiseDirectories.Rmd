@@ -28,13 +28,21 @@ dr_here()
 
 ### data 
 ```{r structureCreate}
-if(!("data" %in% dir(here()))) dir.create(here("data"))
+dir.create(here("data"),
+           showWarnings = FALSE)
 ```
 
 ## data/progressRdats
 
 ```{r progressRdat}
 # Create 'progressRdats' if required
-if(!(dir.exists(here("data/progressRdats")))) dir.create(here("data/progressRdats"))
+dir.create(here("data/progressRdats"),
+           showWarnings = FALSE)
+```
+
+## data/generalRdats
+```{r generalRdats}
+dir.create(here("data/generalRdats"),
+           showWarnings = FALSE)
 ```
 

@@ -24,6 +24,7 @@ Make it real good yeah.
 responses <- 
   readRDS(here("data/generalRdats/leaderResponsesUnclean.rdat"))
 
-responses
+nrow(responses)
+ncol(responses)
 ```
 

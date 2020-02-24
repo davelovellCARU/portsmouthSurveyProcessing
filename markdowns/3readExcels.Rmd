@@ -50,8 +50,29 @@ excelSheet %<>%
                        sheet = .x,
                        skip = .y)}))
 
+# Add abbreviations of column names for ease of cagegorisation::::::::::::
+excelSheet %<>%
+  mutate(abr = map_chr(sheetNames,
+                        ~ switch(.,
+                      "basic info" = "info_",
+                      "motivations" = "mot_",
+                      "leadership" = "lead_", 
+                      "numbers" = "num_",
+                      "tradition" = "trad_",
+                      "description" = "desc_",
+                      "geography" = "geog_",
+                      "mission" = "mis_",
+                      "engage with bible" = "bib_",
+                      "worship community" = "wc_",
+                      "sacraments" = "sac_",
+                      "three self" = "ts_",
+                      "stewardship" = "ste_",
+                      "disciple evangelism" = "de_")))
+
 excelSheet
 ```
+
+
 
 ## Dimension investigation
 
@@ -185,5 +206,7 @@ leaderResponse2019 %<>% cbind(addRowsMatrix)
 
 rbind(leaderResponse2018, leaderResponse2019) ->
   leaderResponses
+
+head(leaderResponses)
 ```
 

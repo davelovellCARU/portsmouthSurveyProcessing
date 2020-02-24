@@ -10,9 +10,10 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r libraries4, message = FALSE, warning = FALSE}
-require(here)
-require(dplyr)
-require(magrittr)
+require("here")
+require("dplyr")
+require("magrittr")
+require("tidyr")
 ```
 ## Clean the Data
 
@@ -271,4 +272,26 @@ saveRDS(tibble(oldNames,
         here("data/generalRdats/names.rdat"))
 ```
 
+## Assign variable types
+
+
+### Logicals
+
+Are these fields all safe to interpret as logicals?
+
+```{r findLogicals}
+responses %>% 
+  mutate_all(as.character) %>% 
+  select(contains("mot_"),
+         contains("train_"),
+         contains("trad_"),
+         contains("desc_"),
+         contains("geog_"),
+         -contains("Other")) %>% 
+  pivot_longer(everything()) %>% 
+  pull(value) %>% 
+  unique
+
+
+```
 

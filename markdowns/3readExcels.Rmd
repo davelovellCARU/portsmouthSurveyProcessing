@@ -35,7 +35,7 @@ excelSheet
 
 ## Do a two 'readxl's for each row
 
-```{r readExcels, warning = FALSE}
+```{r readExcels, warning = FALSE, cache = TRUE}
 
 excelSheet %<>%
   mutate(
@@ -72,7 +72,23 @@ excelSheet %<>%
 excelSheet
 ```
 
+### Append 'abr' to colnames in each tibble
 
+With the exception of the 'Name of fresh expression' column, which will be used to join later.
+
+```{r renameAllTibs}
+excelSheet %<>% 
+  ### Prefix each column name with its sheet prefix ::::::::::::
+  mutate_at(c("data2018","data2019"),
+              ~ map2(.,abr,
+                     ~ rename_at(.x,
+                                 vars(-contains("Fresh expression name")),
+                                  function(m) paste0(unique(.y),m)) %>%
+  ### Add a 'sheet' column to each tibble          ::::::::::::
+              mutate(sheet = .y)))
+
+excelSheet$data2018[[1]]
+```
 
 ## Dimension investigation
 

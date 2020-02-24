@@ -9,8 +9,20 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```{r libraries4}
+require(here)
+require(dplyr)
+```
 ## Clean the Data
 
 Make it real good yeah.
 
 
+### Read the unclean data
+
+```{r readUnclean}
+responses <- 
+  readRDS(here("data/generalRdats/leaderResponesUnclean.rdat"))
+
+responses
+```

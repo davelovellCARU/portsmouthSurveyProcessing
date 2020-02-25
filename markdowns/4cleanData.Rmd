@@ -10,13 +10,13 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r libraries4, message = FALSE, warning = FALSE}
-library("here")
 library("dplyr")
 library("magrittr")
 library("tidyr")
 library("purrr")
 library("stringr")
 library("lubridate")
+library("here") # NB 'here' and 'lubridate' don't interact well, so this needs to go last.
 ```
 ## Clean the Data
 
@@ -27,7 +27,7 @@ Make it real good yeah.
 
 ```{r readUnclean}
 responses <- 
-  readRDS(here("data/generalRdats/leaderResponsesUnclean.rdat"))
+  readRDS(here::here("data/generalRdats/leaderResponsesUnclean.rdat"))
 
 nrow(responses)
 ncol(responses)
@@ -272,7 +272,7 @@ responses %<>%
 ```{r nameDocument}
 saveRDS(tibble(oldNames,
                names(responses)),
-        here("data/generalRdats/names.rdat"))
+        here::here("data/generalRdats/names.rdat"))
 ```
 
 ## Assign variable types
@@ -523,6 +523,37 @@ responses$sac_whyNotBaptisms <- NULL
 responses$sac_whyNotCommunion <- NULL
 responses$sac_whyNotConfirmations <- NULL
 
+```
+
+### Times
+
+We need to make the times into times. Had to go back into excel to coerce the 2018 data into 'date' format, because the columns weren't behaving consistently. 2019 and 2018 data need to be handled differently here
+
+```{r makeDatesNice}
+#Momentarily splitting the tibbles by tranche will avoid the complications of using map with conditionals on a dttm object
+responses %>% 
+  group_by(tranche) %>% 
+  group_split ->
+  splitTibs
+
+# Name these tables
+nameVect = c("2018","2019")
+
+if(all(splitTibs[[1]]["tranche"]=="2019")) nameVect %<>% rev
+
+names(splitTibs = nameVect)
+
+### Excel dates have an origin of "1899-12-30", but since these all all just time data I'm going to make them land on the 1st Jan 2020, rather than some time in 1822
+splitTibs[["2018"]] %<>% 
+  mutate(info_startTime= 
+           lubridate::as_datetime(info_startTime, origin = "2090-01-01"),
+         info_endTime = 
+           lubridate::as_datetime(info_endTime, origin = "2090-01-01"))
+
+## Now the 2019 data, which is different.
+
+splitTibs[["2019"]] %<>%
+  
 ```
 ## Check fields
 

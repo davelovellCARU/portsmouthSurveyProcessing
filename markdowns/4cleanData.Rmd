@@ -69,7 +69,7 @@ responses %<>%
 "mot_physicallyRestricted" = "mot_Physically restricted at sending church", 
 "mot_increaseDiversity" = "mot_Provide increased diversity", 
 "mot_unreachedGroup" = "mot_Unreached people group", 
-"mot_Other" = "mot_Other", 
+"mot_other" = "mot_Other", 
 "mot_otherDetail" = "mot_...10", 
 "lead_name" = "lead_Name of leader", 
 "lead_address" = "lead_Address", 
@@ -192,7 +192,7 @@ responses %<>%
 "com_socialActivities" = "wc_Social activities", 
 "com_socialAction" = "wc_Social action projects", 
 "com_notYet" = "wc_Not yet", 
-"comOther" = "wc_Other...31", 
+"com_other" = "wc_Other...31", 
 "sac_communion" = "sac_Communion services?", 
 "sac_communionFrequency" = "sac_If yes how frequently? (communion)", 
 "sac_agape" = "sac_Agape?", 
@@ -457,7 +457,11 @@ responses %<>%
 This field is complicated - it's treated differently accross tranches. 
 
 ```{r fixComOther}
+unique(responses$com_other)
 
+responses %<>%
+  mutate(com_otherDetail = 
+           repcom_other )
 
 ```
 

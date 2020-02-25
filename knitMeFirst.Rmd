@@ -62,3 +62,13 @@ Read the .xlsx files, concatenate them into a single tibble and save it as `data
 ```{r renderMarkdown3, results = "hide", message=FALSE}
 render(here("markdowns/3readExcels.Rmd"))
 ```
+
+### Render Markdown 4 (Clean Data)
+
+##### Aim:
+
+Cleaning up the very horrible data from the .xlsx files. This is a 667 line markdown file. 
+
+```{r renderMarkdown4, results = "hide", message = FALSE}
+render(here("markdowns/4cleanData.Rmd"))
+```

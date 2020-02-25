@@ -243,7 +243,7 @@ responses %<>%
 "ste_opportunitiesCommunicate" = "ste_The intended message is that people can participate at no cost while there being opportunities to give.  What opportunities are there to give and how are these communicated?", 
 "ste_howBuildStewardship" = "ste_What steps have been taken already to build in stewardship principles in terms of time, talents and money into the fresh expression activities?", 
 "ste_plansSustainibility" = "ste_What plans and strategy is there to ensure financial sustainability over the next 2-3 years and 3-5 years?", 
-"ste_responsibleDecisions" = "ste_Which is responsible for the decision-making and reporting of the fxC?", 
+"ste_decisionResponsibility" = "ste_Which is responsible for the decision-making and reporting of the fxC?", 
 "dis_smallGroups" = "de_Small groups", 
 "dis_oneToOne" = "de_One-to-one", 
 "dis_courses" = "de_Running courses", 
@@ -372,8 +372,7 @@ Non-ordered factors are easy:
 responses %<>%
   mutate_at(c("info_deanery", "lead_gender", "df_denominationalFeatures",
               "bui_type", "bui_ownership", "bui_license", "bui_legalStatus",
-              "mis_dynamic", "sac_whoPresidesCommunion", "ste_responsibleDecisions" 
-              ), as.factor) 
+              "mis_dynamic", "sac_whoPresidesCommunion"), as.factor) 
 
 # This one needs a little handling:
 responses %<>%
@@ -461,7 +460,8 @@ unique(responses$com_other)
 
 responses %<>%
   mutate(com_otherDetail = 
-           repcom_other )
+           replace(com_other,com_other=="1",NA),
+         com_other = !is.na(com_other))
 
 ```
 
@@ -615,6 +615,20 @@ responses %<>%
            {paste0("20",.)} %>% 
            parse_date_time("y"))
 ```
+
+### lead_teamSize
+
+```{r fixTeamSize}
+
+responses$lead_teamSize %>% {.[!is.na(.)&str_detect(.,"\\D")]} 
+#Happy to make that an NA
+
+responses %<>%
+  mutate(lead_teamSize =
+           as.numeric(lead_teamSize))
+  
+```
+
 ## Check fields
 
 ### Low variation character vectors
@@ -642,4 +656,12 @@ responses %>%
 
 I'm not going anywhere near `ste_surplus`. That's about 2 hours of wrangling (or 30 minutes of manual input lol) for data we don't need. 
 
+Likewise I'm going to leave questions about responsibility alone for now, lots of those responses are ugly and I don't know that I'll need to report on them. 
 
+That means it's done! All that remains is to:
+
+## Save RDS
+
+```{r saveCleanedRDAT}
+saveRDS(responses, here("data/generalRdats/responses.rdat"))
+```

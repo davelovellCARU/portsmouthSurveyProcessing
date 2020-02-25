@@ -10,12 +10,13 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r libraries4, message = FALSE, warning = FALSE}
-require("here")
-require("dplyr")
-require("magrittr")
-require("tidyr")
-require("purrr")
-require("stringr")
+library("here")
+library("dplyr")
+library("magrittr")
+library("tidyr")
+library("purrr")
+library("stringr")
+library("lubridate")
 ```
 ## Clean the Data
 
@@ -201,7 +202,7 @@ responses %<>%
 "sac_confirmations" = "sac_Confirmations?", 
 "sac_adultConfirmations" = "sac_If yes number of adults (confirmation)", 
 "sac_childConfirmations" = "sac_If yes number of children (confirmation)", 
-"sac_whyNotCommunnion" = "sac_If no why? - Communion", 
+"sac_whyNotCommunion" = "sac_If no why? - Communion", 
 "sac_whyNotBaptisms" = "sac_If no why? - Baptism", 
 "sac_whyNotConfirmations" = "sac_If no why? Confirmation", 
 "sac_whoPresidesCommunion" = "sac_If yes who presides? - Communion", 
@@ -476,6 +477,53 @@ responses %>%
 
 ```
 
+### Why not baptisms / confirmations / communion
+
+These are encoded in an unusual way, and will need to become multiple fields to preserve tidy priniciples.
+
+```{r tidyWhyNots}
+responses %>% 
+  select(contains("sac_whyNot")) %>% 
+  pivot_longer(everything()) %>% 
+  pull(value) %>% 
+  unique
+
+responses %<>%
+  mutate(sac_bapNotAtThisStage =
+           (str_detect(sac_whyNotBaptisms, "Not at this stage"))|(str_detect(sac_whyNotBaptisms, "Not at that stage")),
+         sac_bapDontSeeTheNeed = 
+           str_detect(sac_whyNotBaptisms,"Don't see the need"),
+         sac_bapImpractical = 
+           str_detect(sac_whyNotBaptisms, "Impractical")|str_detect(sac_whyNotBaptisms, "Impratical"), # Not very pratical
+         sac_bapLackOfAuthorised = 
+           str_detect(sac_whyNotBaptisms, "Lack of authorised person"))
+
+responses %<>%
+  mutate(sac_conNotAtThisStage =
+           (str_detect(sac_whyNotConfirmations, "Not at this stage"))|(str_detect(sac_whyNotConfirmations, "Not at that stage")),
+         sac_conDontSeeTheNeed = 
+           str_detect(sac_whyNotConfirmations,"Don't see the need"),
+         sac_conImpractical = 
+           str_detect(sac_whyNotConfirmations, "Impractical")|str_detect(sac_whyNotConfirmations, "Impratical"), # Not very pratical
+         sac_conLackOfAuthorised = 
+           str_detect(sac_whyNotConfirmations, "Lack of authorised person"))
+
+responses %<>%
+  mutate(sac_comNotAtThisStage =
+           (str_detect(sac_whyNotCommunion, "Not at this stage"))|(str_detect(sac_whyNotCommunion, "Not at that stage")),
+         sac_comDontSeeTheNeed = 
+           str_detect(sac_whyNotCommunion,"Don't see the need"),
+         sac_comImpractical = 
+           str_detect(sac_whyNotCommunion, "Impractical")|str_detect(sac_whyNotCommunion, "Impratical"), # Not very pratical
+         sac_comLackOfAuthorised = 
+           str_detect(sac_whyNotCommunion, "Lack of authorised person"))
+
+## RIP
+responses$sac_whyNotBaptisms <- NULL
+responses$sac_whyNotCommunion <- NULL
+responses$sac_whyNotConfirmations <- NULL
+
+```
 ## Check fields
 
 ### Low variation character vectors

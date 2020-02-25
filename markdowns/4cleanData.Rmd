@@ -475,6 +475,13 @@ responses %>%
                 as.numeric)
 
 ```
+
+## Check fields
+
+### Low variation character vectors
+
+Character vectors with low variation may need to be factors
+
 ```{r limitedResponses}
 responses %>%
   select_if(is.character) %>%
@@ -484,6 +491,14 @@ responses %>%
   summarise(length(unique(value)),
             toString(unique(value))) %>% 
   arrange (`length(unique(value))`)
+```
+
+### All character Vectors
+
+```{r allCharVect}
+responses %>% 
+  select_if(is.character) %>% 
+  glimpse #Much easier
 ```
 
 

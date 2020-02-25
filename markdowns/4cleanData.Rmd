@@ -477,9 +477,7 @@ responses %>%
 ```
 ```{r limitedResponses}
 responses %>%
-  select_if(negate(is.logical)) %>%
-  select_if(negate(is.numeric)) %>%
-  select_if(negate(is.factor)) %>% 
+  select_if(is.character) %>%
   select_if(~ length(unique(.)) < 10) %>%
   pivot_longer(everything()) %>% 
   group_by(name) %>% 

@@ -432,7 +432,8 @@ responses %<>%
   mutate_at(c("bib_notAtThisStage", "dis_notAtThisStage", "eva_notAtThisStage",
               "ts_notAtThisStage", "info_anglican", "sac_agape",
               "sac_baptisms", "sac_communion", "sac_confirmations", "info_stillMeeting",
-              "info_newFurther", "info_isChurch"), 
+              "info_newFurther", "info_isChurch", "mot_other", "desc_other",
+              "wor_other", "sr_other"), 
             ~ str_to_lower(.) %>% 
               str_trim %>% 
               replace(.=="1", "TRUE") %>% 
@@ -450,6 +451,16 @@ responses %<>%
               }} %>% 
               as.logical)
 ```
+
+#### com_other
+
+This field is complicated - it's treated differently accross tranches. 
+
+```{r fixComOther}
+
+
+```
+
 
 ### Mission / network / neighbourhood numerics
 
@@ -598,9 +609,7 @@ responses %<>%
            str_remove_all("\\D") %>% 
            str_extract(".{2}(?=$)") %>% 
            {paste0("20",.)} %>% 
-           parse_date_time("y")) %>% 
-  pull(info_startDate)
-
+           parse_date_time("y"))
 ```
 ## Check fields
 
@@ -627,5 +636,6 @@ responses %>%
   glimpse #Much easier
 ```
 
+I'm not going anywhere near `ste_surplus`. That's about 2 hours of wrangling (or 30 minutes of manual input lol) for data we don't need. 
 
 

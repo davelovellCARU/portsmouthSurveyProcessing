@@ -165,7 +165,7 @@ responses %<>%
 "wor_worshipBand" = "wc_Worship band", 
 "wor_congregationalSinging" = "wc_Congregational singing", 
 "wor_artDramaPoetry" = "wc_Art / Drama / Poetry", 
-"wc_musically" = "wc_Musically", 
+"wor_musically" = "wc_Musically", 
 "wor_openPrayer" = "wc_Open Prayer", 
 "wor_bibleReading" = "wc_Bible reading", 
 "wor_sermon" = "wc_A sermon or talk", 
@@ -304,7 +304,9 @@ responses %>%
   pull(value) %>% 
   unique 
 ```
-These fields can all be interpreted as logicals with `!is.na(x)`.
+These fields can all be interpreted as logicals with `!is.na(x)`, after turning the `0`s into `frogs`/`NA`s.
+
+Note that because these were multiple choice questions, which means we must treat 'blank' responses as `FALSE`. 
 
 ```{r makeLogicals}
 responses %<>% 
@@ -324,7 +326,9 @@ responses %<>%
          contains("eva_"),
          -contains("other"),
          -contains("notAtThisStage")),
-         ~ !is.na(.))
+         ~ {as.character(.) %>% 
+             replace(.=="0",NA)} %>% 
+             (negate(is.na)))
 ```
 
 ### Numerics
@@ -368,7 +372,16 @@ responses %<>%
   mutate_at(c("info_deanery", "lead_gender", "df_denominationalFeatures",
               "bui_type", "bui_ownership", "bui_license", "bui_legalStatus",
               "mis_dynamic", "sac_whoPresidesCommunion", "ste_responsibleDecisions" 
-              ), as.factor)
+              ), as.factor) 
+
+# This one needs a little handling:
+responses %<>%
+  mutate(sac_whoPresidesBaptism = 
+           sac_whoPresidesBaptism %>% 
+           str_trim %>% 
+           replace(.=="Clergy member of the fresh expression",
+                   "Clergy members of the fresh expression") %>% 
+           as.factor)
 ```
 
 Ordered factors take a little longer:
@@ -398,23 +411,81 @@ responses %<>%
                   ordered = TRUE), 
          dive_diversity = 
            dive_diversity %>%
-           replace("Noone with ethnic background at present",
+           replace(.=="Noone with ethnic background at present",
                    "One ethnic background") %>% 
-           replace("None at present",
+           replace(.=="None at present",
                    "One ethnic background") %>% 
            factor(levels = c("Prefer not to say", "One ethnic background",
                              "A few ethnic backgrounds",
-                             "Wide diversity of ethnic backgrounds")))
+                             "Wide diversity of ethnic backgrounds")),
+         )
 
 ```
 
-```{r limitedResponses}
+### More complicated logicals
+
+Some logicals will take a little more cleaning. Also included here are any logicals which cannot be capture by their `"$.+_"` prefix.
+
+```{r cleanComplicatedLgl}
+responses %<>%
+  mutate_at(c("bib_notAtThisStage", "dis_notAtThisStage", "eva_notAtThisStage",
+              "ts_notAtThisStage", "info_anglican", "sac_agape",
+              "sac_baptisms", "sac_communion", "sac_confirmations", "info_stillMeeting",
+              "info_newFurther", "info_isChurch"), 
+            ~ str_to_lower(.) %>% 
+              str_trim %>% 
+              replace(.=="1", "TRUE") %>% 
+              replace(.=="0", "FALSE") %>% 
+              replace(.=="yes", "TRUE") %>% 
+              replace(.=="no", "FALSE") %>% 
+              replace(.=="at present leader does not see this happening.  some leaders are uncomfortable even asking for donations", "FALSE") %>% 
+              replace(.=="i see it as a separate service within st peter's", "FALSE") %>%               replace(.=="personally yes, but many could say no!", "TRUE") %>%
+              replace(.=="yes but only just", "TRUE") %>% 
+              replace(.=="yes and no", "NA") %>% 
+              replace(.=="0.01", "FALSE") %T>%  # Have these people never completed a survey before? Rounding this down lol
+              {if(!all(. %in% c("TRUE","FALSE", "NA", NA))){
+                writeLines("Bad data! Possible data loss if coerced to logical!")
+                print(.[!(. %in% c("TRUE","FALSE", "NA", NA))])
+              }} %>% 
+              as.logical)
+```
+
+### Mission / network / neighbourhood numerics
+
+These are pretty trivial
+
+```{r netNeiEtc}
 responses %>% 
+    select(contains("mis_Task"), contains("netNei_"),
+           contains("sac_adultBaptisms"), contains("sac_childBaptisms")) %>%
+      mutate_all(as.character) %>% 
+      pivot_longer(everything()) %>% 
+      pull(value) %>% 
+      unique %>% 
+      print
+    
+    writeLines("Those can all be handled by extracting any numbers and casting to numeric.
+               The warnings below are good - the coercion is the objective here.")
+
+  responses %<>% 
+    mutate_at(vars(contains("mis_Task"),contains("netNei_"),
+                   contains("sac_adultBaptisms"), contains("sac_childBaptisms")),
+              ~ as.character(.) %>%
+                str_extract("\\d+") %>% 
+                as.numeric)
+
+```
+```{r limitedResponses}
+responses %>%
   select_if(negate(is.logical)) %>%
-  select_if(negate(is.numeric)) %>% 
+  select_if(negate(is.numeric)) %>%
   select_if(negate(is.factor)) %>% 
-  select_if(~ length(unique(.)) < 10) %>% View
-  names()
+  select_if(~ length(unique(.)) < 10) %>%
+  pivot_longer(everything()) %>% 
+  group_by(name) %>% 
+  summarise(length(unique(value)),
+            toString(unique(value))) %>% 
+  arrange (`length(unique(value))`)
 ```
 
 

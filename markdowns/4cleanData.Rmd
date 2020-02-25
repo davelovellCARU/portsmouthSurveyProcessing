@@ -579,6 +579,29 @@ responses = rbind(splitTibs[["2018"]], splitTibs[["2019"]])
 
 ## Don't worry about those warnings - they're caused by lots of empty values and the trial-and-error approach of coalescing two different parse-formats.
 ```
+
+### Start date
+
+There's a lot of varity in 'startDate', but most variables are just dates, so may as well abstract to that fidelity to save time.
+
+As such, not going to bother with dateTime objects - may as well just express year as a double.
+
+No on second thoughts, I'll parse the years as date_times, because that may be more compatible with future tranches.
+
+```{r makeStartDateGood}
+
+responses %<>% 
+  mutate(info_startDate = 
+           info_startDate %>% 
+           replace(. == "Unknown, at least 10 years", NA) %>% 
+           replace(. == "Jul-11 - Messy Church Feb-18 - All Age Messy Church", "2018") %>% 
+           str_remove_all("\\D") %>% 
+           str_extract(".{2}(?=$)") %>% 
+           {paste0("20",.)} %>% 
+           parse_date_time("y")) %>% 
+  pull(info_startDate)
+
+```
 ## Check fields
 
 ### Low variation character vectors

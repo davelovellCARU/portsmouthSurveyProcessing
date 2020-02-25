@@ -15,7 +15,7 @@ library("magrittr")
 library("tidyr")
 library("purrr")
 library("stringr")
-library("lubridate")
+library("lubridate", pos = 20)
 library("here") # NB 'here' and 'lubridate' don't interact well, so this needs to go last.
 ```
 ## Clean the Data

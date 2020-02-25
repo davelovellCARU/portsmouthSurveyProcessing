@@ -662,6 +662,9 @@ That means it's done! All that remains is to:
 
 ## Save RDS
 
+(and csv)
+
 ```{r saveCleanedRDAT}
 saveRDS(responses, here("data/generalRdats/responses.rdat"))
+readr::write_csv(responses, here("data/responses.csv"))
 ```

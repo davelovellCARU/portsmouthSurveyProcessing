@@ -20,8 +20,9 @@ This should be way easier than the leaders responses - attenders data is already
 
 ### Read CSV
 
-```{R readTheAttendersCSV}
+```{R readTheAttendersCSV, message = FALSE}
 attenders <- readr::read_csv(here::here("data/attenders2018Unclean.csv"))
+spec(attenders)
 ```
 
 

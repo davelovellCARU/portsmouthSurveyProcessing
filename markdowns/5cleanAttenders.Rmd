@@ -48,7 +48,7 @@ attenders %<>%  rename_all(tolower)
 ### Look at data
 
 ```{r lookAtCols}
-attenders %>% 
-  select(-PlantName) %>% 
+attenders %>%
+  select(-PlantName) %>%
   sapply(unique)
 ```

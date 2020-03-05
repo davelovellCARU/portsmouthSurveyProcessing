@@ -57,7 +57,7 @@ ifelse(file.exists(here("data/portsmouthLeaders2019.xlsx")),
        "Portsmouth 2019 File not found and O:// drive not available: Please place 'portsmouthLeaders2019.xlsx' in the 'data' directory and knit this document again"}})
 
 ### Is there a (correctly named) Attenders 2018 file (in the right place) --------------------
-ifelse(file.exists(here("data/portsmouthLeaders2019.xlsx")),
+ifelse(file.exists(here("data/attenders2018Unclean.xlsx")),
        "Portsmouth 2019 File Found :)",
        {
          # If file exists on O drive

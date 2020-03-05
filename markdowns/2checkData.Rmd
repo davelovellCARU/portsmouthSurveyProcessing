@@ -20,13 +20,17 @@ require("here")
 ```{r excelFilePlaces}
 allFilesThere <- TRUE
 
+
+### Filename vars -----------------------------------------------------------------------------
+lookFileDir <- "O:\\WCC\\Learning and Development\\Research\\PROJECT - Portsmouth 2019 onwards\\Data\\unclean"
+          file18 <- paste(lookFileDir, "portsmouthLeaders2018.xlsx", sep = "\\")
+          file19 <- paste(lookFileDir, "portsmouthLeaders2019.xlsx", sep = "\\")
+          attenders18 <- paste(lookFileDir, "attenders2018Unclean.xlsx", sep = "\\")
+
 ### Is there a (correctly named) Portsmouth-2018 file (in the right place) --------------------
 ifelse(file.exists(here("data/portsmouthLeaders2018.xlsx")),
        "Portsmouth 2018 File Found :)",
        {
-         lookFileDir <- "O:\\WCC\\Learning and Development\\Research\\PROJECT - Portsmouth 2019 onwards\\Data\\unclean"
-          file18 <- paste(lookFileDir, "portsmouthLeaders2018.xlsx", sep = "\\")
-          file19 <- paste(lookFileDir, "portsmouthLeaders2019.xlsx", sep = "\\")
          # If file exists on O drive
          if(file.exists(file18)){
            # Copy file from O Drive
@@ -36,6 +40,7 @@ ifelse(file.exists(here("data/portsmouthLeaders2018.xlsx")),
          } else {
          allFilesThere <- FALSE
        "Portsmouth 2018 File not found and O:// drive not available: Please place 'portsmouthLeaders2018.xlsx' in the 'data' directory and knit this document again"}})
+          
 
 ### Is there a (correctly named) Portsmouth-2019 file (in the right place) --------------------
 ifelse(file.exists(here("data/portsmouthLeaders2019.xlsx")),

@@ -12,6 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library("magrittr")
 library("readr")
 library("here")
+library("dplry")
 ```
 ## Cleaning the 2018 Attenders Responses
 

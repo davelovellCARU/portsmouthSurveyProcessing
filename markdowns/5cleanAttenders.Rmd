@@ -16,7 +16,7 @@ library("dplyr")
 ```
 # Cleaning the 2018 Attenders Responses
 
-This should be way easier than the leaders responses - attenders data is already clean. Most of the work will go into correctly interpretting the numerical codes used in the original file.
+This should be way easier than the leaders responses - attenders data is already clean. Most of the work will go into correctly interpreting the numerical codes used in the original file.
 
 ## Survey Questions
 
@@ -40,14 +40,14 @@ Before we begin, it's worth acknowledging that this data comes from 2 different 
 |Please circle your age group|Multiple Choice|`11-15` `16-17` `18-24` `25-29` `30-34` `35-44` `45-54` `55-64` `65-74` `75+`|
 |Please circle how often you come to Tots in Tow:|Multiple Choice|`Almost always` `About half the time` `A few times a year` `This is my first or second time` `I'm just visiting today as a one-off`|
 |What is your ethnic background|Multiple Choice|`White` `Black/African/Caribbean/Black British` `Asian/Asian British` `Other` `I'd prefer not to say`|
-|When you started being part of [fxc]...|Multiple Choice /w text|`It was the firtst church community that I had been a part of` `I was returning after a break (of more than 2 years) from church in general` `I moved straight from another church to being a part of [fxc]` `I am part of a church as well as [fxc]`|
+|When you started being part of [fxc]...|Multiple Choice /w text|`It was the first church community that I had been a part of` `I was returning after a break (of more than 2 years) from church in general` `I moved straight from another church to being a part of [fxc]` `I am part of a church as well as [fxc]`|
 |I started being part of [fxc]...|Multiple Choice /w text|`because I moved to the area` `because I was part of the team that came to start this church` `because I changed church and decided this was better for me` `because I started to attend [fxc] before I was five years old` `because of a different reason (please specify)...`|
 |As a child [0-10]...|Multiple Choice|`I was not part of a church community or Sunday school` `I was part of/I stated being part of a church community or a Sunday school` `I was part of a church community of a Sunday school for a while but stopped going during this period`|
 |In my teens [11-17]... [0-10]|Multiple Choice|`I was not part of a church or church youth group` `I was part of/I stated being part of a church or church youth group` `I was part of a church or church youth group for a while but stopped going during this period`|
 |In my late teens/early 20s [18-24]... [0-10]|Multiple Choice|`I was not part of a church or a christian union` `I was part of/I stated being part of a church or a christian union` `I was part of a church or a christian union for a while but stopped going during this period`|
 |As an adult [25+]...|Multiple Choice w/ text|`I was not part of a church community until (please put the year)` `I have been a church goer all my adult life` `I did leave church, but came back in (year of your return)` `it's quite complicated because`|
 |Would you identify yourself as a Christian|Multiple Choice|`Yes` `No` `I'm exploring Christianity` `It's complicated`|
-|If Yes to Q12, did you become a Christian at [fxc]|Multiple Choice|`Yes` `No, I was laready a Christian` `Tots in Tow helped me rediscover a faith I had lost`|
+|If Yes to Q12, did you become a Christian at [fxc]|Multiple Choice|`Yes` `No, I was already a Christian` `Tots in Tow helped me rediscover a faith I had lost`|
 
 
 ## Read CSV
@@ -57,4 +57,20 @@ attenders <- readr::read_csv(here::here("data/attenders2018Unclean.csv"))
 spec(attenders)
 ```
 
+## Kill Bad Cols
+
+Some of these columns are redundant - probably the vestige of the some other fxc survey.
+
+```{r findBadCols}
+attenders %>% 
+  select_if(~ length(unique(.)) == 1) %>%
+  summarise_all(unique) %>%
+  glimpse
+```
+
+All those can go
+
+```{r killBadCols}
+attenders %<>% select_if(~ length(unique(.)) > 1) 
+```
 

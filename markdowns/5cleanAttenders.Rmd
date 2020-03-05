@@ -81,3 +81,6 @@ attenders %>%
   summarise_all(~ toString(sample(unique(.), 6, replace = TRUE))) %>% 
   glimpse
 ```
+Actually most of those seem worth keeping. `>10 years` can go, evidently a column derived from other data. Also what are `Class1` and `Class2`? 
+
+Ah interesting - we don't actually have fxc names - just ids. Will need to pull another table from the .mdb in order to join them I guess.

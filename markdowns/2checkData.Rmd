@@ -24,10 +24,13 @@ allFilesThere <- TRUE
 ifelse(file.exists(here("data/portsmouthLeaders2018.xlsx")),
        "Portsmouth 2018 File Found :)",
        {
+         lookFileDir <- "O:\\WCC\\Learning and Development\\Research\\PROJECT - Portsmouth 2019 onwards\\Data\\unclean"
+          file18 <- paste(lookFileDir, "portsmouthLeaders2018.xlsx", sep = "\\")
+          file19 <- paste(lookFileDir, "portsmouthLeaders2019.xlsx", sep = "\\")
          # If file exists on O drive
-         if(file.exists("O:\\WCC\\Learning and Development\\Research\\PROJECT - Portsmouth 2019 onwards\\Strand 2 - Evaluation of Pioneer Programme\\Quantitative\\Data\\portsmouthLeaders2018.xlsx")){
+         if(file.exists(file18)){
            # Copy file from O Drive
-           file.copy(from = "O:\\WCC\\Learning and Development\\Research\\PROJECT - Portsmouth 2019 onwards\\Strand 2 - Evaluation of Pioneer Programme\\Quantitative\\Data\\portsmouthLeaders2018.xlsx",
+           file.copy(from = file18,
                      to = here("data"))
            "Portsmouth 2018 succesfully copied from O drive"
          } else {
@@ -39,9 +42,9 @@ ifelse(file.exists(here("data/portsmouthLeaders2019.xlsx")),
        "Portsmouth 2019 File Found :)",
        {
          # If file exists on O drive
-         if(file.exists("O:\\WCC\\Learning and Development\\Research\\PROJECT - Portsmouth 2019 onwards\\Strand 2 - Evaluation of Pioneer Programme\\Quantitative\\Data\\portsmouthLeaders2019.xlsx")){
+         if(file.exists(file19)){
            # Copy file from O Drive
-           file.copy(from = "O:\\WCC\\Learning and Development\\Research\\PROJECT - Portsmouth 2019 onwards\\Strand 2 - Evaluation of Pioneer Programme\\Quantitative\\Data\\portsmouthLeaders2019.xlsx",
+           file.copy(from = file19,
                      to = here("data"))
            "Portsmouth 2019 succesfully copied from O drive"
          } else {

@@ -24,39 +24,7 @@ This should be way easier than the leaders responses - attenders data is already
 attenders <- readr::read_csv(here::here("data/attenders2018Unclean.csv"))
 ```
 
-### Rename
 
-Also dropping `DioceseID`
-
-```{r renamingAttenders}
-# Change some names -------------------------------------
-attenders %<>%
-  select("fxc" = PlantName,
-         Gender,
-         "age" = AgeGroup,
-         Regularity,
-         Ethnicity,
-         Class1,
-         Class2,
-         "moreTenYears" = `>10 years`,
-         christian = `Christian?`,
-         "becameHere" = `Became Christian here?`)
-
-# Everything lowercase ----------------------------------
-attenders %<>%  rename_all(tolower)
-```
-
-### Look at data
-
-```{r lookAtCols}
-attenders %>%
-  select(-fxc) %>%
-  sapply(unique)
-```
-
-Before we go any further, it would be helpful to know what's in the original survey.
-
-#### Survey Questions
 
 ##### Kids survey
 

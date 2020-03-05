@@ -14,11 +14,43 @@ library("readr")
 library("here")
 library("dplyr")
 ```
-## Cleaning the 2018 Attenders Responses
+# Cleaning the 2018 Attenders Responses
 
 This should be way easier than the leaders responses - attenders data is already clean. Most of the work will go into correctly interpretting the numerical codes used in the original file.
 
-### Read CSV
+## Survey Questions
+
+Before we begin, it's worth acknowledging that this data comes from 2 different surveys. To clean it, we'll need to know what questions were used in those surveys.
+
+### Kids survey
+
+|Question|Type|Responses|
+|---|---|---|
+|Are you a boy or a girl?|Multiple Choice|`Boy` `Girl`|
+|How old are you?|Text|`NA`|
+|How often do you come to [fxc]?|Multiple Choice|`Almost always` `about half the time` `A few times a year` `This is my first or second time` `I'm just visiting today as a one-off`|
+|Before being part of [fxc]...|Multiple Choice|`I was not part of another church because I didn't go to church` `I had a big gap between my last church and being part of [fxc]` `I moved straight to [fxc] from my last church` `I am part of a church as well as [fxc]`|
+|Why did you start coming to [fxc]?|Multiple Choice w/ text|`We moved to the area` ` My family or I were part of the team that came to start this church` `My family or I changed church and decided this was better for us` `I stated coming to [fxc] before I was 5 years old` `A different reason (please write it down):`|
+
+### Adults Survey 
+
+|Question|Type|Responses|
+|---|---|---|
+|Please circle your gender|Multiple Choice|`Female` `Male` `Other`|
+|Please circle your age group|Multiple Choice|`11-15` `16-17` `18-24` `25-29` `30-34` `35-44` `45-54` `55-64` `65-74` `75+`|
+|Please circle how often you come to Tots in Tow:|Multiple Choice|`Almost always` `About half the time` `A few times a year` `This is my first or second time` `I'm just visiting today as a one-off`|
+|What is your ethnic background|Multiple Choice|`White` `Black/African/Caribbean/Black British` `Asian/Asian British` `Other` `I'd prefer not to say`|
+|When you started being part of [fxc]...|Multiple Choice /w text|`It was the firtst church community that I had been a part of` `I was returning after a break (of more than 2 years) from church in general` `I moved straight from another church to being a part of [fxc]` `I am part of a church as well as [fxc]`|
+|I started being part of [fxc]...|Multiple Choice /w text|`because I moved to the area` `because I was part of the team that came to start this church` `because I changed church and decided this was better for me` `because I started to attend [fxc] before I was five years old` `because of a different reason (please specify)...`|
+|As a child [0-10]...|Multiple Choice|`I was not part of a church community or Sunday school` `I was part of/I stated being part of a church community or a Sunday school` `I was part of a church community of a Sunday school for a while but stopped going during this period`|
+|In my teens [11-17]... [0-10]|Multiple Choice|`I was not part of a church or church youth group` `I was part of/I stated being part of a church or church youth group` `I was part of a church or church youth group for a while but stopped going during this period`|
+|In my late teens/early 20s [18-24]... [0-10]|Multiple Choice|`I was not part of a church or a christian union` `I was part of/I stated being part of a church or a christian union` `I was part of a church or a christian union for a while but stopped going during this period`|
+|As an adult [25+]...|Multiple Choice w/ text|`I was not part of a church community until (please put the year)` `I have been a church goer all my adult life` `I did leave church, but came back in (year of your return)` `it's quite complicated because`|
+|Would you identify yourself as a Christian|Multiple Choice|`Yes` `No` `I'm exploring Christianity` `It's complicated`|
+|If Yes to Q12, did you become a Christian at [fxc]|Multiple Choice|`Yes` `No, I was laready a Christian` `Tots in Tow helped me rediscover a faith I had lost`|
+
+
+## Read CSV
 
 ```{R readTheAttendersCSV, message = FALSE}
 attenders <- readr::read_csv(here::here("data/attenders2018Unclean.csv"))
@@ -26,13 +58,3 @@ spec(attenders)
 ```
 
 
-
-##### Kids survey
-
-|Question|Type|Responses|
-|---|---|---|---|
-|Are you a boy or a girl?|Multiple Choice|`Boy` `Girl`|
-|How old are you?|Text|`NA`|
-|How often do you come to [fxc]?|Multiple Choice|`Almost always` `about half the time` `A few times a year` `This is my first or second time` `I'm just visiting today as a one-off`|
-|Before being part of [fxc]...|Multiple Choice|`I was not part of another church because I didn't go to church` `I had a big gap between my last church and being part of [fxc]` `I moved straight to [fxc] from my last church` `I am part of a church as well as [fxc]`|
-|Why did you start coming to [fxc]?|Multiple Choice w/ text|`We moved to the area` ` My family or I were part of the team that came to start this church` `My family or I changed church and decided this was better for us` `I stated coming to [fxc] before I was 5 years old` `A different reason (please write it down):`|

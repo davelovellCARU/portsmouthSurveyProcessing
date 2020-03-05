@@ -74,3 +74,10 @@ All those can go
 attenders %<>% select_if(~ length(unique(.)) > 1) 
 ```
 
+Some of these other columns look well dubious, let's scope them out.
+
+```{r whoDis}
+attenders %>%
+  summarise_all(~ toString(sample(unique(.), 6, replace = TRUE))) %>% 
+  glimpse
+```

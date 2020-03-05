@@ -53,3 +53,17 @@ attenders %>%
   select(-fxc) %>%
   sapply(unique)
 ```
+
+Before we go any further, it would be helpful to know what's in the original survey.
+
+#### Survey Questions
+
+##### Kids survey
+
+|Question|Type|Responses|
+|---|---|---|---|
+|Are you a boy or a girl?|Multiple Choice|`Boy` `Girl`|
+|How old are you?|Text|`NA`|
+|How often do you come to [fxc]?|Multiple Choice|`Almost always` `about half the time` `A few times a year` `This is my first or second time` `I'm just visiting today as a one-off`|
+|Before being part of [fxc]...|Multiple Choice|`I was not part of another church because I didn't go to church` `I had a big gap between my last church and being part of [fxc]` `I moved straight to [fxc] from my last church` `I am part of a church as well as [fxc]`|
+|Why did you start coming to [fxc]?|Multiple Choice w/ text|`We moved to the area` ` My family or I were part of the team that came to start this church` `My family or I changed church and decided this was better for us` `I stated coming to [fxc] before I was 5 years old` `A different reason (please write it down):`|

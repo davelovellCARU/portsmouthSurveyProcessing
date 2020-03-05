@@ -1,0 +1,24 @@
+---
+title: "attendersCleaning"
+author: "Dave Lovell"
+date: "05/03/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r libraries5}
+library("magrittr")
+library("readr")
+library("here")
+```
+## Cleaning the 2018 Attenders Responses
+
+This should be way easier than the leaders responses - attenders data is already clean. Most of the work will go into correctly interpretting the numerical codes used in the original file.
+
+### Read CSV
+
+```{R readTheAttendersCSV}
+attenders <- readr::read_csv(here::here("data/attenders2018Unclean.csv"))
+```

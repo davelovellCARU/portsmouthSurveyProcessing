@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library("magrittr")
 library("readr")
 library("here")
-library("dplry")
+library("dplyr")
 ```
 ## Cleaning the 2018 Attenders Responses
 
@@ -50,6 +50,6 @@ attenders %<>%  rename_all(tolower)
 
 ```{r lookAtCols}
 attenders %>%
-  select(-PlantName) %>%
+  select(-fxc) %>%
   sapply(unique)
 ```

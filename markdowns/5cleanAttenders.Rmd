@@ -255,3 +255,32 @@ attenders %<>%
 # Drop ----------------------------------------
 attenders %<>% select(-Regularity)
 ```
+
+### transferStatus
+
+Flying blind here - don't think there's any documentation of how these numbers correspond
+to responses. But probably safe to assume that things were encoded in the order that they appear on the survey. Then can check with the report. 
+
+But is this the question I think it is?
+
+```{r transferStatusGlimpse}
+attenders$TransferStatus %>% unique
+```
+
+```{r transferStatusRecode}
+# # Recode (and rename) -------------------------
+# attenders %<>%
+#   mutate(transferStatus = 
+#            Regularity %>% 
+#            factor %>% 
+#            fct_recode("almostAlways" = "1",
+#                       "halfTheTime" = "2",
+#                       "fewTimesAYear" = "3",
+#                       "firstTime" = "4",
+#                       "visiting" = "5") %>% 
+#              fct_explicit_na())
+# # Drop ----------------------------------------
+# attenders %<>% select(-Regularity)
+```
+
+

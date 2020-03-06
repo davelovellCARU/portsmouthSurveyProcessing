@@ -198,10 +198,13 @@ attenders %<>% select(-ResponseType)
 
 ### ageGroup
 
+Age group is encoded strangely, mostly out a desire to be careful not to report on under fives (which the diocese wanted to record anyway). `5.4` means 4.
+
 ```{r ageGroupRecode}
 # Recode (and rename) -------------------------
 attenders %<>%
-  mutate(ageGroup = factor(AgeGroup))
+  mutate(ageGroup = 
+           factor(AgeGroup))
 # Drop ----------------------------------------
 attenders %<>% select(-AgeGroup)
 ```

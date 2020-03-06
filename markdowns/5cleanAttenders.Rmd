@@ -159,4 +159,14 @@ attenders %<>%
            fct_explicit_na()) 
 ```
 
+`class2` is a derived category - it's calculated from the responses to several different questions. Here's how it appears to work:
+
+1. Those who are "truly" non or de churched (or grew up here) are not assigned a `class2`. In the reports, these `class2` `NA`s are functionally coalesced with the church backgrounds column.
+2. Those ticking 'I am part of a church as well as [fxc] for **question 6** are assigned `blending`
+3. Those who are 'churched' (excluding `grewUp`s) but not 'blending' are assigned another `class2` value, based on their response to **question 7**. Either
+  a. Their response is automatically encoded as one of: `team`, `moved` or `better` based on the box they ticked.
+  b. Tickers of `because of a different reason (please specify)` are encoded as one of the above (if they are bad at surveys), or dropped into the catchall category (`family`) of "family, friends, or life patterns".
+
+### fxC Names
+
 We don't actually have fxc names - just ids. Will need to pull another table from the .mdb in order to join them I guess.

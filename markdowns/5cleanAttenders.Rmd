@@ -14,6 +14,7 @@ library("readr")
 library("here")
 library("dplyr")
 library("forcats")
+library("stringr")
 ```
 # Cleaning the 2018 Attenders Responses
 
@@ -204,7 +205,9 @@ Age group is encoded strangely, mostly out a desire to be careful not to report 
 # Recode (and rename) -------------------------
 attenders %<>%
   mutate(ageGroup = 
-           factor(AgeGroup))
+           str_trim(AgeGroup) %>% 
+           str_remove("$5\\.") %>% #get rid of strange notation
+           factor)
 # Drop ----------------------------------------
 attenders %<>% select(-AgeGroup)
 ```

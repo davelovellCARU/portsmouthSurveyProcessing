@@ -112,13 +112,13 @@ Class 1 corresponds to 'church status' - one of:
 # 'class1' (no capital) is factor from num vals of 'Class1'
  attenders %<>%
    mutate(class1 = factor(Class1) %>% 
-            fct_recode("churched" = "1",
+            fct_recode("(Missing)" = "0",
+                       "churched" = "1",
                        "grewUp" = "2",
                        "complexDe" = "3",
                        "copmlexNon" = "4",
                        "simpleDe" = "5",
-                       "simpleNon" = "6") %>% 
-            fct_explicit_na())
+                       "simpleNon" = "6"))
 
 # Drop original column, 'Class1' (with capital C)
 attenders %<>% select(-Class1)
@@ -133,15 +133,6 @@ NB all this 'working out' is coming from consultation with my colleague Eslpeth 
 ### Class2
 
 `Class2` is about why you started coming to this fxC. Not everybody gets a `class2` - or rather, many people get a `Class2` of 0. You only get a `Class2` > 0 if your `Class1 %in% c(1,3,4)`. That is, only 'churched' people get a `Class2` 
-
-```{r makeClass2ZeroesNAs}
-# Make '0' into NA for Class 2 ---------------------
-attenders %<>%
-  mutate(class2 = replace(Class2, Class2 == 0, NA))
-
-# Drop capitalised Class2 ---------------------------
-attenders %<>% select(-Class2)
-```
 
 Just reviewing the 2018 attenders report ^[O:/WCC/Learning and Development/Research/Archive/Complete PROJECT - Portsmouth 2018/Reports/Portsmouth attenders survey report 2018.pdf]. It looks like 'reason for joining' is reported either in terms of `class2` for all 'churched' attenders, or in terms of church background for the truly 'de/non-churched' (as well as 'grew up this fxC' people. Ethically dubious that we made some people fill in a question that didn't really apply to them. ~~Anyhow the headline is that `Class2` is not a derived category, unless ignoring a response counts a derivation.~~
 
@@ -160,13 +151,15 @@ Here are the values for class2:
 
 ```{r class2IsAFactorNow}
 attenders %<>%
-  mutate(class2 = factor(class2) %>% 
-           fct_recode("team" = "1",
+  mutate(class2 = factor(Class2) %>% 
+           fct_recode("(Missing)" = "0",
+                      "team" = "1",
                       "blending" = "2",
                       "moved" = "3",
                       "better" = "4",
-                      "family" = "5") %>% 
-           fct_explicit_na()) 
+                      "family" = "5")) 
+
+attenders %<>% select(-Class2)
 ```
 
 `class2` is a derived category - it's calculated from the responses to several different questions. Here's how it appears to work:
@@ -226,12 +219,10 @@ Yes gender is either 'Male', 'Female' or 'NA'
 # Recode (and rename) -------------------------
 attenders %<>%
   mutate(gender = 
-           Gender %>%
-           replace(.,.=="N", NA) %>% 
-           factor %>% 
-           fct_recode("female" = "F",
-                      "male" = "M") %>% 
-             fct_explicit_na())
+           factor(Gender) %>% 
+           fct_recode("(Missing)" = "N",
+                      "female" = "F",
+                      "male" = "M"))
 # Drop ----------------------------------------
 attenders %<>% select(-Gender)
 ```
@@ -246,12 +237,12 @@ attenders %<>%
   mutate(regularity = 
            Regularity %>% 
            factor %>% 
-           fct_recode("almostAlways" = "1",
+           fct_recode("(Missing)" = "0",
+                      "almostAlways" = "1",
                       "halfTheTime" = "2",
                       "fewTimesAYear" = "3",
                       "firstTime" = "4",
-                      "visiting" = "5") %>% 
-             fct_explicit_na())
+                      "visiting" = "5"))
 # Drop ----------------------------------------
 attenders %<>% select(-Regularity)
 ```
@@ -277,11 +268,11 @@ attenders %<>%
   mutate(churchBackground =
            TransferStatus %>%
            factor %>%
-           fct_recode("nonChurched" = "1",
+           fct_recode("(Missing)" = "0",
+                      "nonChurched" = "1",
                       "deChurched" = "2",
                       "churched" = "3",
-                      "blending" = "4") %>%
-             fct_explicit_na())
+                      "blending" = "4"))
 # Drop ----------------------------------------
 attenders %<>% select(-TransferStatus)
 ```
@@ -306,12 +297,12 @@ attenders %<>%
   mutate(transferReason = 
            TransferReason %>% 
            factor %>% 
-           fct_recode("moved" = "1",
+           fct_recode("(Missing)" = "0",
+                      "moved" = "1",
                       "team" = "2",
                       "better" = "3",
                       "grewUp" = "4",
-                      "other" = "5") %>% 
-             fct_explicit_na())
+                      "other" = "5"))
 # Drop ----------------------------------------
 attenders %<>% select(-TransferReason)
 ```
@@ -358,16 +349,7 @@ attenders %<>%
               {paste0("status",.)})
 ```
 
-I'm going to coerce 0 and 9 to NA - one means no response and one means no response required, but none of that needs to be inherent. 
-
-```{r getRid0and9}
-attenders %<>%
-  mutate_at(c("statusChild",
-              "statusTeen",
-              "statusYoung",
-              "statusAdult"),
-            ~ replace(.,. %in% c(0,9), NA))
-```
+I'm going to coerce 0 and 9 to NA - one means no response and one means no response required, but none of that needs to be inherent.
 
 Now also make these into factors
 
@@ -378,11 +360,12 @@ attenders %<>%
                "statusYoung",
                "statusAdult"),
              ~ factor(.) %>% 
-              fct_recode("notPart" = "1",
+              fct_recode("(Missing)" = "0",
+                         "(Missing)" = "9",
+                         "notPart" = "1",
                          "wasPart" = "2",
                          "stoppedHere" = "3",
-                         "complicated" = "4") %>% 
-              fct_explicit_na())
+                         "complicated" = "4"))
 ```
 
 Those warning are fine, especially because there are three of them - only `statusAdult` should have `complicated` values. But also good practise to clean them up:
@@ -416,11 +399,11 @@ A slightly ambiguous question - 'I am currently a student' is offered as an alte
 attenders %<>%
   mutate(higherEducation =
            factor(University) %>% 
-           fct_recode("university" = "1",
+           fct_recode("(Missing)" = "0",
+                      "university" = "1",
                       "currentlyStudent" = "2",
                       "apprenticeship" = "3",
-                      "noneOfThese" = "4") %>% 
-           fct_explicit_na())
+                      "noneOfThese" = "4"))
 
 attenders %<>% select(-University)
 ```
@@ -437,15 +420,14 @@ unique(attenders$Ethnicity)
 
 attenders %<>%
   mutate(ethnicity =
-           replace(Ethnicity, Ethnicity == 0, NA) %>% 
-           factor %>% 
-           fct_recode("white" = "1",
+           factor("Ethnicity") %>% 
+           fct_recode("(Missing)" = "0",
+                      "white" = "1",
                       "black" = "2",
                       "asian" = "3",
                       "mixed" = "4",
                       "other" = "5",
-                      "ratherNotSay" = "6") %>% 
-           fct_explicit_na())
+                      "ratherNotSay" = "6"))
 ```
 
 Just realised that `~ replace(.,.==0,NA) %>% factor %>% fct_recode %>% fct_explicit_na()` is equivalent to `~factor(.) %>% fct_recode("(Missing)" = "0")`

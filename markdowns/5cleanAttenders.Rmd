@@ -198,10 +198,12 @@ attenders %<>% select(-ResponseType)
 
 ### ageGroup
 
-```{r responseTypeRecode}
+```{r ageGroupRecode}
 # Recode (and rename) -------------------------
 attenders %<>%
   mutate(ageGroup = factor(AgeGroup))
 # Drop ----------------------------------------
 attenders %<>% select(-AgeGroup)
 ```
+
+

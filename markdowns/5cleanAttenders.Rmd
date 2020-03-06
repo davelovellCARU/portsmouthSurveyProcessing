@@ -535,3 +535,21 @@ attenders %>% sapply(class)
 ```{r lookAllUniques}
 attenders %>% select_if(~ length(.) > length(unique(.))) %>% sapply(function(x) unique(as.character(x))[1:10])
 ```
+
+looking good!
+
+## Let's save that data!
+
+```{r saveRDS}
+
+saveRDS(attenders, here::here("data/generalRdats/attenders2018.rdat"))
+
+```
+
+Also let's save one with no under fives in;
+
+```{r saveNoUnderFives}
+saveRDS(attenders %>% 
+          filter(!(ageGroup %in% c("0","1","2","3","4"))),
+        here::here("data/generalRdats/attenders2018NoUnderFives.rdat"))
+```

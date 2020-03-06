@@ -79,6 +79,6 @@ if(continue) render(here("markdowns/4cleanData.Rmd"))
 
 Cleaning up the very attenders 2018 survey data. Only 555 lines. 
 
-```{r renderMarkdown4, results = "hide", message = FALSE}
+```{r renderMarkdown5, results = "hide", message = FALSE}
 if(continue) render(here("markdowns/5cleanAttenders.Rmd"))
 ```

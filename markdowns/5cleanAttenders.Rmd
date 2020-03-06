@@ -346,3 +346,43 @@ attenders %>%
 ```
 
 Okay, our assumptions are good. Big relief.
+
+### Life Stages
+
+Rename all of these to suit my own conventions:
+
+```{r renameStages}
+attenders %<>%
+  rename_at(vars(contains("Status")),
+            ~ str_remove(.,"Status") %>% 
+              {paste0("status",.)})
+```
+
+I'm going to coerce 0 and 9 to NA - one means no response and one means no response required, but none of that needs to be inherent. 
+
+```{r getRid0and9}
+attenders %<>%
+  mutate_at(c("statusChild",
+              "statusTeen",
+              "statusYoung",
+              "statusAdult"),
+            ~ replace(.,. %in% c(0,9), NA))
+```
+
+Now also make these into factors
+
+```{r makeStatusFactors}
+attenders %<>%
+  mutate_at(c("statusChild",
+               "statusTeen",
+               "statusYoung",
+               "statusAdult"),
+             ~ factor(.) %>% 
+              fct_recode("notPart" = "1",
+                         "wasPart" = "2",
+                         "stoppedHere" = "3",
+                         "complicated" = "4") %>% 
+              fct_explicit_na())
+```
+
+Those warning are fine, especially because there are three of them - only `statusAdult` should have `complicated` values. But also good practise to clean them up:

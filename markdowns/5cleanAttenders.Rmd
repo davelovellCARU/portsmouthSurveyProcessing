@@ -560,5 +560,5 @@ saveRDS(attenders %>%
 
 write.csv(attenders %>% 
             filter(!(ageGroup %in% c("0","1","3","2","4"))),
-          here::here("data/attendersNoUnderFives.rdat"))
+          here::here("data/attendersNoUnderFives.csv"))
 ```

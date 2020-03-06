@@ -545,7 +545,8 @@ looking good!
 saveRDS(attenders, here::here("data/generalRdats/attenders2018.rdat"))
 
 #also CSV
-write.csv(attenders, here::here("data/attenders2018.csv"))
+write.csv(attenders, here::here("data/attenders2018.csv"),
+        row.names = FALSE)
 
 ```
 
@@ -554,8 +555,7 @@ Also let's save one with no under fives in;
 ```{r saveNoUnderFives}
 saveRDS(attenders %>% 
           filter(!(ageGroup %in% c("0","1","2","3","4"))),
-        here::here("data/generalRdats/attenders2018NoUnderFives.rdat"),
-        row.names = FALSE)
+        here::here("data/generalRdats/attenders2018NoUnderFives.rdat"))
 
 # Also csv
 

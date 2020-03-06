@@ -469,3 +469,19 @@ attenders %>% summarise_all(~ toString(sample(unique(.), 6, replace = TRUE))) %>
 ```
 
 Balls. We've got a '5' floating around in `higherEducation`, and a '4' inside `becameHere`. Just as well that we stopped using `fct_explicit_na`.
+
+**Okay**
+
+Elspeth has helped me again - the original database has a very confusing user interface that lets you see the original data. Turns out those 4/5s are an artifact of a quirk of the data entry interface - 0's correspond to nothing having been selected, but 4/5s correspond to the selection of a `none selected` option. Fixed easily enough:
+
+```{r fixingthosefactors}
+attenders %<>%
+  mutate(christian = 
+           fct_recode(christian,
+                      "(Missing)" = "5"))
+
+attenders %<>%
+  mutate(becameHere = 
+           fct_recode(becameHere,
+                      "(Missing)" = "4"))
+```

@@ -286,4 +286,14 @@ attenders %<>%
 attenders %<>% select(-TransferStatus)
 ```
 
+Let's check that this corresponds with report findings:
+
+```{r checkChurchBackgrounds}
+attenders$churchBackground %>% 
+  table %>% 
+  {./sum(.) * 100}
+```
+
+Ah. This cannot yet be tested - it needs to be tested in conjuction with other responses (because `grewUp` responses need removing.)
+
 

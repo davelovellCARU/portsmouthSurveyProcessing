@@ -198,6 +198,7 @@ Age group is encoded strangely, mostly out a desire to be careful not to report 
 
 ```{r ageGroupRecode}
 # Recode (and rename) -------------------------
+  
 attenders %<>%
   mutate(ageGroup = 
            str_trim(AgeGroup) %>% 
@@ -383,9 +384,15 @@ attenders %<>%
 
 ### YearStarted and YearReturned
 
-Let's have these as numerics
+Let's have these as numerics.
+
+Why are so many of them '1900'? I'll ask Elspeth.
 
 ```{r yearsMutation}
+attenders$YearStarted %>% table
+attenders$yearReturned %>% table
+
+
 attenders %<>%
   mutate(yearStated = as.integer(YearStarted),
          yearReturned = as.integer(YearReturned))

@@ -335,7 +335,12 @@ attenders %>%
   unique
 
 attenders %>%
-  filter(class2=="moved") %>%
+  filter(class2=="team") %>%
+  pull(transferReason) %>%
+  unique
+
+attenders %>%
+  filter(class2=="(Missing)") %>%
   pull(transferReason) %>%
   unique
 ```

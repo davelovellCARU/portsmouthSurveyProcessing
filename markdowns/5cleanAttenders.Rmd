@@ -123,6 +123,15 @@ NB all this 'working out' is coming from consultation with my colleague Eslpeth 
 
 `Class2` is about why you started coming to this fxC. Not everybody gets a `class2` - or rather, many people get a `Class2` of 0. You only get a `Class2` > 0 if your `Class1 %in% c(1,3,4)`. That is, only 'churched' people get a `Class2` 
 
+```{r makeClass2ZeroesNAs}
+# Make '0' into NA for Class 2 ---------------------
+attenders %<>%
+  mutate(class2 = replace(Class2, Class2 == 0, NA))
+
+# Drop capitalised Class2 ---------------------------
+attenders %<>% select(-Class2)
+```
+
 
 
 

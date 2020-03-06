@@ -68,7 +68,7 @@ ifelse(file.exists(here("data/attenders2018Unclean.xlsx")),
            "Attenders 2018 succesfully copied from O drive"
          } else {
          allFilesThere <- FALSE
-       "Attenders 2018 file not found and O:// drive not available: Please place 'portsmouthLeaders2019.xlsx' in the 'data' directory and knit this document again"}})
+       "Attenders 2018 file not found and O:// drive not available: Please place 'attenders2018Unclean.xlsx' in the 'data' directory and knit this document again"}})
 ```
 
 ```{r writeRDS2}

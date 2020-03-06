@@ -323,3 +323,21 @@ attenders$transferReason %>%
   table %>% 
   {round((./sum(.) * 100))}
 ```
+
+Oh wow - 40% other! 
+
+Wait let's try something else:
+
+```{r somethingElse}
+attenders %>%
+  filter(class2=="team") %>%
+  pull(transferReason) %>%
+  unique
+
+attenders %>%
+  filter(class2=="moved") %>%
+  pull(transferReason) %>%
+  unique
+```
+
+Okay, our assumptions are good. Big relief.

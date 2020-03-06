@@ -267,20 +267,23 @@ But is this the question I think it is?
 attenders$TransferStatus %>% unique
 ```
 
+Yes, only four possible responses. That narrows the field somewhat. Also fits with the assumption that the questions are recorded in survey order. Always very likely.
+
+Going to rename `TransferStatus` to `churchBackground`, because that's really what it's asking for. 
+
 ```{r transferStatusRecode}
-# # Recode (and rename) -------------------------
-# attenders %<>%
-#   mutate(transferStatus = 
-#            Regularity %>% 
-#            factor %>% 
-#            fct_recode("almostAlways" = "1",
-#                       "halfTheTime" = "2",
-#                       "fewTimesAYear" = "3",
-#                       "firstTime" = "4",
-#                       "visiting" = "5") %>% 
-#              fct_explicit_na())
-# # Drop ----------------------------------------
-# attenders %<>% select(-Regularity)
+# Recode (and rename) -------------------------
+attenders %<>%
+  mutate(churchBackground =
+           TransferStatus %>%
+           factor %>%
+           fct_recode("nonChurched" = "1",
+                      "deChurched" = "2",
+                      "churched" = "3",
+                      "blending" = "4") %>%
+             fct_explicit_na())
+# Drop ----------------------------------------
+attenders %<>% select(-TransferStatus)
 ```
 
 

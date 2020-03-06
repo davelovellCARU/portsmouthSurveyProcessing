@@ -13,6 +13,7 @@ library("magrittr")
 library("readr")
 library("here")
 library("dplyr")
+library("forcats")
 ```
 # Cleaning the 2018 Attenders Responses
 
@@ -97,6 +98,11 @@ Class 1 corresponds to 'church status' - one of:
 |Simple de-churched|5|
 |Simple non-churched|6|
 
+# ```{r makeFactorClass1}
+# attenders %<>%
+#   mutate(class1 = factor(class1))
+# ```
+
 Counterintuitively, `Complex de-churched`, `Complex non-churched` and `Churched` are all types of `Churched`. In these cases, the 'non' and 'de' labels refer to events that precede arrival at the fxc. Remember that 'churched', 'de-churched' and 'non-churched' labels by default exist in relation to the fxC.
 
 Elspeth tells me that 'Class 1' is human derived. But I belive that, for 'uncomplicated' surveys (without weird written notes), it should be possible to derive these labels with a kind of 'black-box' technique, by matching new data to old and assigning the same `class1` value. Obviously `class1` is going to be renamed. 
@@ -105,7 +111,8 @@ NB all this 'working out' is coming from consultation with my colleague Eslpeth 
 
 ### Class2
 
-`Class2` is about 
+`Class2` is about why you started coming to this fxC. Not everybody gets a `class2` - or rather, many people get a `Class2` of 0. You only get a `Class2` > 0 if your `Class1 %in% c(1,3,4)`. That is, only 'churched' people get a `Class2` 
+
 
 
 

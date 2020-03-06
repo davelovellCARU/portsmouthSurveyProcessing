@@ -98,10 +98,20 @@ Class 1 corresponds to 'church status' - one of:
 |Simple de-churched|5|
 |Simple non-churched|6|
 
-# ```{r makeFactorClass1}
-# attenders %<>%
-#   mutate(class1 = factor(class1))
-# ```
+```{r makeFactorClass1}
+# 'class1' (no capital) is factor from num vals of 'Class1'
+ attenders %<>%
+   mutate(class1 = factor(Class1) %>% 
+            fct_recode("churched" = "1",
+                       "grewUp" = "2",
+                       "complexDe" = "3",
+                       "copmlexNon" = "4",
+                       "simpleDe" = "5",
+                       "simpleNon" = "6"))
+
+# Drop original column, 'Class1' (with capital C)
+attenders %<>% select(-Class1)
+```
 
 Counterintuitively, `Complex de-churched`, `Complex non-churched` and `Churched` are all types of `Churched`. In these cases, the 'non' and 'de' labels refer to events that precede arrival at the fxc. Remember that 'churched', 'de-churched' and 'non-churched' labels by default exist in relation to the fxC.
 

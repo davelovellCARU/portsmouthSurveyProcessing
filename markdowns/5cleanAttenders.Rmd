@@ -485,3 +485,40 @@ attenders %<>%
            fct_recode(becameHere,
                       "(Missing)" = "4"))
 ```
+
+Oh there's also a 5 in `higherEducation` and a 6 in `regularity`. These also correspond to 'not answered'.
+
+```{r fixingthosefactors}
+attenders %<>%
+  mutate(higherEducation = 
+           fct_recode(higherEducation,
+                      "(Missing)" = "5"))
+
+attenders %<>%
+  mutate(regularity = 
+           fct_recode(regularity,
+                      "(Missing)" = "6"))
+```
+
+
+## Rename
+
+A few fields need renaming for consistency
+
+```{r renamingAFewThings}
+attenders %<>%
+  rename("responseId" = "ResponseID",
+         "plantId" = "PlantID",
+         "transferOther" = "TransferOther",
+         "complicatedReason" = "ComplicatedReason",
+         "note" = "Notes")
+```
+
+
+Also going to drop responseRef - it's a unique identifier for responses within  a particular plant, but it's redundant because 
+
+```{r droppingResponseRef}
+attenders %<>%
+  select(-ResponseRef)
+```
+

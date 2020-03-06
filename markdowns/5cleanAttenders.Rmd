@@ -91,7 +91,7 @@ This never comes up the 2018 report, and it doesn't correspond to any of the sur
 
 **Be gone!**
 ```{r beGoneScrub}
-attenders %<>% select(-`>10 Years`)
+attenders %<>% select(-`>10 years`)
 ```
 
 ### Class1
@@ -222,5 +222,5 @@ attenders %<>%
            fct_recode("female" = "F",
                       "male" = "M"))
 # Drop ----------------------------------------
-attenders %<>% select(-ResponseType)
+attenders %<>% select(-Gender)
 ```

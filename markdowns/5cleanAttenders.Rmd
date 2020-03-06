@@ -386,3 +386,12 @@ attenders %<>%
 ```
 
 Those warning are fine, especially because there are three of them - only `statusAdult` should have `complicated` values. But also good practise to clean them up:
+
+```{r cleaningStageFactors}
+attenders %<>%
+  mutate_at(c("statusChild",
+              "statusTeen",
+              "statusYoung",
+              "statusAdult"),
+            fct_drop)
+```

@@ -84,7 +84,9 @@ attenders %>%
   glimpse
 ```
 
-Actually most of those seem worth keeping. `>10 years` can go, evidently a column derived from other data. Also what are `Class1` and `Class2`? 
+Actually most of those seem worth keeping. `>10 years` can go, evidently a column derived from other data. Also what are `Class1` and `Class2`?
+
+Ah `class1` and `class2` are 'primary' and 'secondary' classifications respectively (this insight from the data entry interface). `notes` is short for 'Decision Notes' - they document why a particular set of classifications were chosen. 
 
 ### >10 years
 
@@ -488,7 +490,7 @@ attenders %<>%
 
 Oh there's also a 5 in `higherEducation` and a 6 in `regularity`. These also correspond to 'not answered'.
 
-```{r fixingthosefactors}
+```{r fixingthosefactorsSomeMore}
 attenders %<>%
   mutate(higherEducation = 
            fct_recode(higherEducation,
@@ -522,3 +524,14 @@ attenders %<>%
   select(-ResponseRef)
 ```
 
+## Look Again
+
+Let's take a comprehensive look at this data:
+
+```{r talkAboutClass}
+attenders %>% sapply(class)
+```
+
+```{r lookAllUniques}
+attenders %>% select_if(~ length(.) > length(unique(.))) %>% sapply(function(x) unique(as.character(x))[1:10])
+```

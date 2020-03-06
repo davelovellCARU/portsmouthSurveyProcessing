@@ -448,16 +448,15 @@ attenders %<>% select(-`Christian?`)
 ```
 ### becameHere
 
-```{r ChristianCleaning}
+```{r becameHereCleaning}
 attenders %<>%
-  mutate(christian = 
-           factor(`Christian?`) %>% 
+  mutate(becameHere =
+           factor(`Became Christian here?`) %>%
            fct_recode("(Missing)" = "0",
                       "yes" = "1",
                       "no" = "2",
-                      "exploring" = "3",
-                      "complicated" = "4"))
+                      "rediscover" = "3"))
 
-attenders %<>$ select(-`Christian?`)
+attenders %<>% select(-`Became Christian here?`)
 ```
 

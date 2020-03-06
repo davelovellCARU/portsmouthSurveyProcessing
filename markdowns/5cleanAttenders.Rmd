@@ -179,3 +179,29 @@ attenders %<>%
 ### fxC Names
 
 We don't actually have fxc names - just ids. Will need to pull another table from the .mdb in order to join them I guess.
+
+## Recode Various things as factors
+
+### Response Type
+
+```{r responseTypeRecode}
+# Recode (and rename) -------------------------
+attenders %<>%
+  mutate(responseType = 
+           ResponseType %>% 
+           factor %>% 
+           fct_recode("child" = "C",
+                      "adult" = "A"))
+# Drop ----------------------------------------
+attenders %<>% select(-ResponseType)
+```
+
+<!-- ### ageGroup -->
+
+<!-- ```{r responseTypeRecode} -->
+<!-- # Recode (and rename) ------------------------- -->
+<!-- attenders %<>% -->
+<!--   mutate(ageGroup = factor(AgeGroup)) -->
+<!-- # Drop ---------------------------------------- -->
+<!-- attenders %<>% select(-AgeGroup) -->
+<!-- ``` -->

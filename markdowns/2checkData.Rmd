@@ -25,7 +25,7 @@ allFilesThere <- TRUE
 lookFileDir <- "O:\\WCC\\Learning and Development\\Research\\PROJECT - Portsmouth 2019 onwards\\Data\\unclean"
           file18 <- paste(lookFileDir, "portsmouthLeaders2018.xlsx", sep = "\\")
           file19 <- paste(lookFileDir, "portsmouthLeaders2019.xlsx", sep = "\\")
-          attenders18 <- paste(lookFileDir, "attenders2018Unclean.xlsx", sep = "\\")
+          attenders18 <- paste(lookFileDir, "attenders2018Unclean.csv", sep = "\\")
 
 ### Is there a (correctly named) Portsmouth-2018 file (in the right place) --------------------
 ifelse(file.exists(here("data/portsmouthLeaders2018.xlsx")),
@@ -57,8 +57,8 @@ ifelse(file.exists(here("data/portsmouthLeaders2019.xlsx")),
        "Portsmouth 2019 File not found and O:// drive not available: Please place 'portsmouthLeaders2019.xlsx' in the 'data' directory and knit this document again"}})
 
 ### Is there a (correctly named) Attenders 2018 file (in the right place) --------------------
-ifelse(file.exists(here("data/attenders2018Unclean.xlsx")),
-       "Portsmouth 2019 File Found :)",
+ifelse(file.exists(here("data/attenders2018Unclean.csv")),
+       "Attenders 2018 File Found :)",
        {
          # If file exists on O drive
          if(file.exists(attenders18)){
@@ -68,7 +68,8 @@ ifelse(file.exists(here("data/attenders2018Unclean.xlsx")),
            "Attenders 2018 succesfully copied from O drive"
          } else {
          allFilesThere <- FALSE
-       "Attenders 2018 file not found and O:// drive not available: Please place 'attenders2018Unclean.xlsx' in the 'data' directory and knit this document again"}})
+
+       "Attenders 2018 file not found and O:// drive not available: Please place 'attenders2018Unlean.csv' in the 'data' directory and knit this document again"}})
 ```
 
 ```{r writeRDS2}

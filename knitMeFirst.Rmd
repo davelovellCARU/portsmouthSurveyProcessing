@@ -72,3 +72,13 @@ Cleaning up the very horrible data from the .xlsx files. This is a 667 line mark
 ```{r renderMarkdown4, results = "hide", message = FALSE}
 if(continue) render(here("markdowns/4cleanData.Rmd"))
 ```
+
+### Render Markdown 5 (Clean Attenders Data)
+
+##### Aim:
+
+Cleaning up the very attenders 2018 survey data. Only 555 lines. 
+
+```{r renderMarkdown4, results = "hide", message = FALSE}
+if(continue) render(here("markdowns/5cleanAttenders.Rmd"))
+```

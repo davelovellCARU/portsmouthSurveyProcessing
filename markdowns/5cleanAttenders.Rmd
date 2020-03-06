@@ -1,0 +1,555 @@
+---
+title: "attendersCleaning"
+author: "Dave Lovell"
+date: "05/03/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r libraries5}
+library("magrittr")
+library("readr")
+library("here")
+library("dplyr")
+library("forcats")
+library("stringr")
+```
+# Cleaning the 2018 Attenders Responses
+
+This should be way easier than the leaders responses - attenders data is already clean. Most of the work will go into correctly interpreting the numerical codes used in the original file.
+
+## Survey Questions
+
+Before we begin, it's worth acknowledging that this data comes from 2 different surveys. To clean it, we'll need to know what questions were used in those surveys.
+
+### Kids survey
+
+|Question|Type|Responses|
+|---|---|---|
+|Are you a boy or a girl?|Multiple Choice|`Boy` `Girl`|
+|How old are you?|Text|`NA`|
+|How often do you come to [fxc]?|Multiple Choice|`Almost always` `about half the time` `A few times a year` `This is my first or second time` `I'm just visiting today as a one-off`|
+|Before being part of [fxc]...|Multiple Choice|`I was not part of another church because I didn't go to church` `I had a big gap between my last church and being part of [fxc]` `I moved straight to [fxc] from my last church` `I am part of a church as well as [fxc]`|
+|Why did you start coming to [fxc]?|Multiple Choice w/ text|`We moved to the area` ` My family or I were part of the team that came to start this church` `My family or I changed church and decided this was better for us` `I stated coming to [fxc] before I was 5 years old` `A different reason (please write it down):`|
+
+### Adults Survey 
+
+|Question|Type|Responses|
+|---|---|---|
+|Please circle your gender|Multiple Choice|`Female` `Male` `Other`|
+|Please circle your age group|Multiple Choice|`11-15` `16-17` `18-24` `25-29` `30-34` `35-44` `45-54` `55-64` `65-74` `75+`|
+|Please circle how often you come to Tots in Tow:|Multiple Choice|`Almost always` `About half the time` `A few times a year` `This is my first or second time` `I'm just visiting today as a one-off`|
+|What is your ethnic background|Multiple Choice|`White` `Black/African/Caribbean/Black British` `Asian/Asian British` `Other` `I'd prefer not to say`|
+|When you started being part of [fxc]...|Multiple Choice /w text|`It was the first church community that I had been a part of` `I was returning after a break (of more than 2 years) from church in general` `I moved straight from another church to being a part of [fxc]` `I am part of a church as well as [fxc]`|
+|I started being part of [fxc]...|Multiple Choice /w text|`because I moved to the area` `because I was part of the team that came to start this church` `because I changed church and decided this was better for me` `because I started to attend [fxc] before I was five years old` `because of a different reason (please specify)...`|
+|As a child [0-10]...|Multiple Choice|`I was not part of a church community or Sunday school` `I was part of/I stated being part of a church community or a Sunday school` `I was part of a church community of a Sunday school for a while but stopped going during this period`|
+|In my teens [11-17]... [0-10]|Multiple Choice|`I was not part of a church or church youth group` `I was part of/I stated being part of a church or church youth group` `I was part of a church or church youth group for a while but stopped going during this period`|
+|In my late teens/early 20s [18-24]... [0-10]|Multiple Choice|`I was not part of a church or a christian union` `I was part of/I stated being part of a church or a christian union` `I was part of a church or a christian union for a while but stopped going during this period`|
+|As an adult [25+]...|Multiple Choice w/ text|`I was not part of a church community until (please put the year)` `I have been a church goer all my adult life` `I did leave church, but came back in (year of your return)` `it's quite complicated because`|
+|Would you identify yourself as a Christian|Multiple Choice|`Yes` `No` `I'm exploring Christianity` `It's complicated`|
+|If Yes to Q12, did you become a Christian at [fxc]|Multiple Choice|`Yes` `No, I was already a Christian` `Tots in Tow helped me rediscover a faith I had lost`|
+
+
+## Read CSV
+
+```{R readTheAttendersCSV, message = FALSE}
+attenders <- readr::read_csv(here::here("data/attenders2018Unclean.csv"))
+spec(attenders)
+```
+
+## Kill Bad Cols
+
+Some of these columns are redundant - probably the vestige of the some other fxc survey.
+
+```{r findBadCols}
+attenders %>% 
+  select_if(~ length(unique(.)) == 1) %>%
+  summarise_all(unique) %>%
+  glimpse
+```
+
+All those can go
+
+```{r killBadCols}
+attenders %<>% select_if(~ length(unique(.)) > 1) 
+```
+
+Some of these other columns look well dubious, let's scope them out.
+
+```{r whoDis}
+attenders %>%
+  summarise_all(~ toString(sample(unique(.), 6, replace = TRUE))) %>% 
+  glimpse
+```
+
+Actually most of those seem worth keeping. `>10 years` can go, evidently a column derived from other data. Also what are `Class1` and `Class2`?
+
+Ah `class1` and `class2` are 'primary' and 'secondary' classifications respectively (this insight from the data entry interface). `notes` is short for 'Decision Notes' - they document why a particular set of classifications were chosen. 
+
+### >10 years
+
+This never comes up the 2018 report, and it doesn't correspond to any of the survey questions. 
+
+**Be gone!**
+```{r beGoneScrub}
+attenders %<>% select(-`>10 years`)
+```
+
+### Class1
+
+Class 1 corresponds to 'church status' - one of:
+
+|Church Status|Class1|
+|---|---|
+|Churched|1|
+|Grown Up Here|2|
+|Complex de-churched|3|
+|Complex non-churched|4|
+|Simple de-churched|5|
+|Simple non-churched|6|
+
+```{r makeFactorClass1}
+# 'class1' (no capital) is factor from num vals of 'Class1'
+ attenders %<>%
+   mutate(class1 = factor(Class1) %>% 
+            fct_recode("(Missing)" = "0",
+                       "churched" = "1",
+                       "grewUp" = "2",
+                       "complexDe" = "3",
+                       "copmlexNon" = "4",
+                       "simpleDe" = "5",
+                       "simpleNon" = "6"))
+
+# Drop original column, 'Class1' (with capital C)
+attenders %<>% select(-Class1)
+```
+
+Counterintuitively, `Complex de-churched`, `Complex non-churched` and `Churched` are all types of `Churched`. In these cases, the 'non' and 'de' labels refer to events that precede arrival at the fxc. Remember that 'churched', 'de-churched' and 'non-churched' labels by default exist in relation to the fxC.
+
+Elspeth tells me that 'Class 1' is human derived. But I belive that, for 'uncomplicated' surveys (without weird written notes), it should be possible to derive these labels with a kind of 'black-box' technique, by matching new data to old and assigning the same `class1` value. Obviously `class1` is going to be renamed. 
+
+NB all this 'working out' is coming from consultation with my colleague Eslpeth and an investigation of the 'Overall attenders survey findings' document ^[O:/WCC/Learning and Development/Research/Archive/Complete PROJECT - Portsmouth 2018/Attenders survey/Overall attenders survey findings.xlsx]
+
+### Class2
+
+`Class2` is about why you started coming to this fxC. Not everybody gets a `class2` - or rather, many people get a `Class2` of 0. You only get a `Class2` > 0 if your `Class1 %in% c(1,3,4)`. That is, only 'churched' people get a `Class2` 
+
+Just reviewing the 2018 attenders report ^[O:/WCC/Learning and Development/Research/Archive/Complete PROJECT - Portsmouth 2018/Reports/Portsmouth attenders survey report 2018.pdf]. It looks like 'reason for joining' is reported either in terms of `class2` for all 'churched' attenders, or in terms of church background for the truly 'de/non-churched' (as well as 'grew up this fxC' people. Ethically dubious that we made some people fill in a question that didn't really apply to them. ~~Anyhow the headline is that `Class2` is not a derived category, unless ignoring a response counts a derivation.~~
+
+Here are the values for class2:
+
+|Transfer Reason|Class2|
+|---|---|
+|(simple)De/non or grew up here|0|
+|Part of the team sent to start this church|1|
+|Part of another church as well|2|
+|Moved to the area|3|
+|This church is better for me|4|
+|Family, friends or life patterns|5|
+|Simple non-churched|6|
+
+
+```{r class2IsAFactorNow}
+attenders %<>%
+  mutate(class2 = factor(Class2) %>% 
+           fct_recode("(Missing)" = "0",
+                      "team" = "1",
+                      "blending" = "2",
+                      "moved" = "3",
+                      "better" = "4",
+                      "family" = "5")) 
+
+attenders %<>% select(-Class2)
+```
+
+`class2` is a derived category - it's calculated from the responses to several different questions. Here's how it appears to work:
+
+1. Those who are "truly" non or de churched (or grew up here) are not assigned a `class2`. In the reports, these `class2` `NA`s are functionally coalesced with the church backgrounds column.
+2. Those ticking 'I am part of a church as well as [fxc] for **question 6** are assigned `blending`
+3. Those who are 'churched' (excluding `grewUp`s) but not 'blending' are assigned another `class2` value, based on their response to **question 7**. Either
+  a. Their response is automatically encoded as one of: `team`, `moved` or `better` based on the box they ticked.
+  b. Tickers of `because of a different reason (please specify)` are encoded as one of the above (if they are bad at surveys), or dropped into the catch-all category (`family`) of "family, friends, or life patterns".
+
+### fxC Names
+
+We don't actually have fxc names - just ids. Will need to pull another table from the .mdb in order to join them I guess.
+
+## Recode Various things as factors
+
+### Response Type
+
+```{r responseTypeRecode}
+# Recode (and rename) -------------------------
+attenders %<>%
+  mutate(responseType = 
+           ResponseType %>% 
+           factor %>% 
+           fct_recode("child" = "C",
+                      "adult" = "A"))
+# Drop ----------------------------------------
+attenders %<>% select(-ResponseType)
+```
+
+### ageGroup
+
+Age group is encoded strangely, mostly out a desire to be careful not to report on under fives (which the diocese wanted to record anyway). `5.4` means 4.
+
+```{r ageGroupRecode}
+# Recode (and rename) -------------------------
+attenders %<>%
+  mutate(ageGroup = 
+           str_trim(AgeGroup) %>% 
+           str_remove("^5\\.") %>% #get rid of strange notation
+           factor)
+# Drop ----------------------------------------
+attenders %<>% select(-AgeGroup)
+```
+
+### gender
+
+How are `prefer not to say`s treated in the processing? Hope their not made the same as `NA` (although probably fine if so).
+
+```{r genderGlimpse}
+attenders$Gender %>% unique
+```
+
+Yes gender is either 'Male', 'Female' or 'NA'
+
+```{r genderRecode}
+# Recode (and rename) -------------------------
+attenders %<>%
+  mutate(gender = 
+           factor(Gender) %>% 
+           fct_recode("(Missing)" = "N",
+                      "female" = "F",
+                      "male" = "M"))
+# Drop ----------------------------------------
+attenders %<>% select(-Gender)
+```
+
+### regularity
+
+Again, these vals are taken from the excel sheet in the footnote.
+
+```{r regularityRecode}
+# Recode (and rename) -------------------------
+attenders %<>%
+  mutate(regularity = 
+           Regularity %>% 
+           factor %>% 
+           fct_recode("(Missing)" = "0",
+                      "almostAlways" = "1",
+                      "halfTheTime" = "2",
+                      "fewTimesAYear" = "3",
+                      "firstTime" = "4",
+                      "visiting" = "5"))
+# Drop ----------------------------------------
+attenders %<>% select(-Regularity)
+```
+
+### transferStatus
+
+Flying blind here - don't think there's any documentation of how these numbers correspond
+to responses. But probably safe to assume that things were encoded in the order that they appear on the survey. Then can check with the report. 
+
+But is this the question I think it is?
+
+```{r transferStatusGlimpse}
+attenders$TransferStatus %>% unique
+```
+
+Yes, only four possible responses. That narrows the field somewhat. Also fits with the assumption that the questions are recorded in survey order. Always very likely.
+
+Going to rename `TransferStatus` to `churchBackground`, because that's really what it's asking for. 
+
+```{r transferStatusRecode}
+# Recode (and rename) -------------------------
+attenders %<>%
+  mutate(churchBackground =
+           TransferStatus %>%
+           factor %>%
+           fct_recode("(Missing)" = "0",
+                      "nonChurched" = "1",
+                      "deChurched" = "2",
+                      "churched" = "3",
+                      "blending" = "4"))
+# Drop ----------------------------------------
+attenders %<>% select(-TransferStatus)
+```
+
+Let's check that this corresponds with report findings:
+
+```{r checkChurchBackgrounds}
+attenders$churchBackground %>% 
+  table %>% 
+  {./sum(.) * 100}
+```
+
+Ah. This cannot yet be tested - it needs to be tested in conjuction with other responses (because `grewUp` responses need removing.)
+
+### transferReason
+
+Making the same assumptions as above
+
+```{r transferReasonRecode}
+# Recode (and rename) -------------------------
+attenders %<>%
+  mutate(transferReason = 
+           TransferReason %>% 
+           factor %>% 
+           fct_recode("(Missing)" = "0",
+                      "moved" = "1",
+                      "team" = "2",
+                      "better" = "3",
+                      "grewUp" = "4",
+                      "other" = "5"))
+# Drop ----------------------------------------
+attenders %<>% select(-TransferReason)
+```
+
+Okay. If `grewUp` is about 17% of all `transferReason`s then things are looking good. 
+
+```{r checkingTransferReason}
+attenders$transferReason %>% 
+  table %>% 
+  {round((./sum(.) * 100))}
+```
+
+Oh wow - 40% other! 
+
+Wait let's try something else:
+
+```{r somethingElse}
+attenders %>%
+  filter(class2=="team") %>%
+  pull(transferReason) %>%
+  unique
+
+attenders %>%
+  filter(class2=="team") %>%
+  pull(transferReason) %>%
+  unique
+
+attenders %>%
+  filter(class2=="(Missing)") %>%
+  pull(transferReason) %>%
+  unique
+```
+
+Okay, our assumptions are good. Big relief.
+
+### Life Stages
+
+Rename all of these to suit my own conventions:
+
+```{r renameStages}
+attenders %<>%
+  rename_at(vars(contains("Status")),
+            ~ str_remove(.,"Status") %>% 
+              {paste0("status",.)})
+```
+
+I'm going to coerce 0 and 9 to NA - one means no response and one means no response required, but none of that needs to be inherent.
+
+Now also make these into factors
+
+```{r makeStatusFactors}
+attenders %<>%
+  mutate_at(c("statusChild",
+               "statusTeen",
+               "statusYoung",
+               "statusAdult"),
+             ~ factor(.) %>% 
+              fct_recode("(Missing)" = "0",
+                         "(Missing)" = "9",
+                         "notPart" = "1",
+                         "wasPart" = "2",
+                         "stoppedHere" = "3",
+                         "complicated" = "4"))
+```
+
+Those warning are fine, especially because there are three of them - only `statusAdult` should have `complicated` values. But also good practise to clean them up:
+
+```{r cleaningStageFactors}
+attenders %<>%
+  mutate_at(c("statusChild",
+              "statusTeen",
+              "statusYoung",
+              "statusAdult"),
+            fct_drop)
+```
+
+### YearStarted and YearReturned
+
+Let's have these as numerics
+
+```{r yearsMutation}
+attenders %<>%
+  mutate(yearStated = as.integer(YearStarted),
+         yearReturned = as.integer(YearReturned))
+
+attenders %<>% select(-YearStarted,-YearReturned) 
+```
+
+### University
+
+A slightly ambiguous question - 'I am currently a student' is offered as an alternative to 'Yes' for the question 'Have you attended university?' Is this 'currently a university student?' or a more general definition of studenthood?
+
+```{r universityCleaning}
+attenders %<>%
+  mutate(higherEducation =
+           factor(University) %>% 
+           fct_recode("(Missing)" = "0",
+                      "university" = "1",
+                      "currentlyStudent" = "2",
+                      "apprenticeship" = "3",
+                      "noneOfThese" = "4"))
+
+attenders %<>% select(-University)
+```
+
+### Ethnicity
+
+This encoding is from the previously mentioned `.xlsx` file. It's not the same order as the listing on the survey.
+
+This is why we do things like this now.
+
+
+```{r cleaningEthnicity}
+unique(attenders$Ethnicity)
+
+attenders %<>%
+  mutate(ethnicity =
+           factor(Ethnicity) %>% 
+           fct_recode("(Missing)" = "0",
+                      "white" = "1",
+                      "black" = "2",
+                      "asian" = "3",
+                      "mixed" = "4",
+                      "other" = "5",
+                      "ratherNotSay" = "6"))
+
+attenders %<>% select(-Ethnicity)
+```
+
+### Christian
+
+```{r ChristianCleaning}
+attenders %<>%
+  mutate(christian = 
+           factor(`Christian?`) %>% 
+           fct_recode("(Missing)" = "0",
+                      "yes" = "1",
+                      "no" = "2",
+                      "exploring" = "3",
+                      "complicated" = "4"))
+
+attenders %<>% select(-`Christian?`)
+```
+### becameHere
+
+```{r becameHereCleaning}
+attenders %<>%
+  mutate(becameHere =
+           factor(`Became Christian here?`) %>%
+           fct_recode("(Missing)" = "0",
+                      "yes" = "1",
+                      "no" = "2",
+                      "rediscover" = "3"))
+
+attenders %<>% select(-`Became Christian here?`)
+```
+
+## Review
+
+Let's take a look at what's been achieved:
+
+```{r review}
+attenders %>% summarise_all(~ toString(sample(unique(.), 6, replace = TRUE))) %>% glimpse
+```
+
+Balls. We've got a '5' floating around in `higherEducation`, and a '4' inside `becameHere`. Just as well that we stopped using `fct_explicit_na`.
+
+**Okay**
+
+Elspeth has helped me again - the original database has a very confusing user interface that lets you see the original data. Turns out those 4/5s are an artifact of a quirk of the data entry interface - 0's correspond to nothing having been selected, but 4/5s correspond to the selection of a `none selected` option. Fixed easily enough:
+
+```{r fixingthosefactors}
+attenders %<>%
+  mutate(christian = 
+           fct_recode(christian,
+                      "(Missing)" = "5"))
+
+attenders %<>%
+  mutate(becameHere = 
+           fct_recode(becameHere,
+                      "(Missing)" = "4"))
+```
+
+Oh there's also a 5 in `higherEducation` and a 6 in `regularity`. These also correspond to 'not answered'.
+
+```{r fixingthosefactorsSomeMore}
+attenders %<>%
+  mutate(higherEducation = 
+           fct_recode(higherEducation,
+                      "(Missing)" = "5"))
+
+attenders %<>%
+  mutate(regularity = 
+           fct_recode(regularity,
+                      "(Missing)" = "6"))
+```
+
+
+## Rename
+
+A few fields need renaming for consistency
+
+```{r renamingAFewThings}
+attenders %<>%
+  rename("responseId" = "ResponseID",
+         "plantId" = "PlantID",
+         "transferOther" = "TransferOther",
+         "complicatedReason" = "ComplicatedReason",
+         "note" = "Notes")
+```
+
+
+Also going to drop responseRef - it's a unique identifier for responses within  a particular plant, but it's redundant because 
+
+```{r droppingResponseRef}
+attenders %<>%
+  select(-ResponseRef)
+```
+
+## Look Again
+
+Let's take a comprehensive look at this data:
+
+```{r talkAboutClass}
+attenders %>% sapply(class)
+```
+
+```{r lookAllUniques}
+attenders %>% select_if(~ length(.) > length(unique(.))) %>% sapply(function(x) unique(as.character(x))[1:10])
+```
+
+looking good!
+
+## Let's save that data!
+
+```{r saveRDS}
+
+saveRDS(attenders, here::here("data/generalRdats/attenders2018.rdat"))
+
+```
+
+Also let's save one with no under fives in;
+
+```{r saveNoUnderFives}
+saveRDS(attenders %>% 
+          filter(!(ageGroup %in% c("0","1","2","3","4"))),
+        here::here("data/generalRdats/attenders2018NoUnderFives.rdat"))
+```

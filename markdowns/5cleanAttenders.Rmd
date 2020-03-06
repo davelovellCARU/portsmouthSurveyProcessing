@@ -229,3 +229,24 @@ attenders %<>%
 # Drop ----------------------------------------
 attenders %<>% select(-Gender)
 ```
+
+### Regularity
+
+Again, these vals are taken from the excel sheet in the footnote.
+
+### gender
+```{r regularityRecode}
+# Recode (and rename) -------------------------
+attenders %<>%
+  mutate(regularity = 
+           Regularity %>% 
+           factor %>% 
+           fct_recode("almostAlways" = "1",
+                      "halfTheTime" = "2",
+                      "fewTimesAYear" = "3",
+                      "firstTime" = "4",
+                      "visiting" = "5") %>% 
+             fct_explicit_na())
+# Drop ----------------------------------------
+attenders %<>% select(-Regularity)
+```

@@ -420,7 +420,7 @@ unique(attenders$Ethnicity)
 
 attenders %<>%
   mutate(ethnicity =
-           factor("Ethnicity") %>% 
+           factor(Ethnicity) %>% 
            fct_recode("(Missing)" = "0",
                       "white" = "1",
                       "black" = "2",
@@ -428,6 +428,36 @@ attenders %<>%
                       "mixed" = "4",
                       "other" = "5",
                       "ratherNotSay" = "6"))
+
+attenders %<>% select(-Ethnicity)
 ```
 
-Just realised that `~ replace(.,.==0,NA) %>% factor %>% fct_recode %>% fct_explicit_na()` is equivalent to `~factor(.) %>% fct_recode("(Missing)" = "0")`
+### Christian
+
+```{r ChristianCleaning}
+attenders %<>%
+  mutate(christian = 
+           factor(`Christian?`) %>% 
+           fct_recode("(Missing)" = "0",
+                      "yes" = "1",
+                      "no" = "2",
+                      "exploring" = "3",
+                      "complicated" = "4"))
+
+attenders %<>% select(-`Christian?`)
+```
+### becameHere
+
+```{r ChristianCleaning}
+attenders %<>%
+  mutate(christian = 
+           factor(`Christian?`) %>% 
+           fct_recode("(Missing)" = "0",
+                      "yes" = "1",
+                      "no" = "2",
+                      "exploring" = "3",
+                      "complicated" = "4"))
+
+attenders %<>$ select(-`Christian?`)
+```
+

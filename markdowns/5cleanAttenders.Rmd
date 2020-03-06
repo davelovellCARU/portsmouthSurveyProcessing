@@ -213,14 +213,19 @@ How are `prefer not to say`s treated in the processing? Hope their not made the 
 ```{r genderGlimpse}
 attenders$Gender %>% unique
 ```
+
+Yes gender is either 'Male', 'Female' or 'NA'
+
 ```{r genderRecode}
 # Recode (and rename) -------------------------
 attenders %<>%
   mutate(gender = 
-           Gender %>% 
+           Gender %>%
+           replace(.,.=="N", NA) %>% 
            factor %>% 
            fct_recode("female" = "F",
-                      "male" = "M"))
+                      "male" = "M") %>% 
+             fct_explicit_na())
 # Drop ----------------------------------------
 attenders %<>% select(-Gender)
 ```

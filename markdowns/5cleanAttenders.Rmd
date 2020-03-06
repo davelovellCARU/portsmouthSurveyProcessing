@@ -407,3 +407,45 @@ attenders %<>%
 
 attenders %<>% select(-YearStarted,-YearReturned) 
 ```
+
+### University
+
+A slightly ambiguous question - 'I am currently a student' is offered as an alternative to 'Yes' for the question 'Have you attended university?' Is this 'currently a university student?' or a more general definition of studenthood?
+
+```{r universityCleaning}
+attenders %<>%
+  mutate(higherEducation =
+           factor(University) %>% 
+           fct_recode("university" = "1",
+                      "currentlyStudent" = "2",
+                      "apprenticeship" = "3",
+                      "noneOfThese" = "4") %>% 
+           fct_explicit_na())
+
+attenders %<>% select(-University)
+```
+
+### Ethnicity
+
+This encoding is from the previously mentioned `.xlsx` file. It's not the same order as the listing on the survey.
+
+This is why we do things like this now.
+
+
+```{r cleaningEthnicity}
+unique(attenders$Ethnicity)
+
+attenders %<>%
+  mutate(ethnicity =
+           replace(Ethnicity, Ethnicity == 0, NA) %>% 
+           factor %>% 
+           fct_recode("white" = "1",
+                      "black" = "2",
+                      "asian" = "3",
+                      "mixed" = "4",
+                      "other" = "5",
+                      "ratherNotSay" = "6") %>% 
+           fct_explicit_na())
+```
+
+Just realised that `~ replace(.,.==0,NA) %>% factor %>% fct_recode %>% fct_explicit_na()` is equivalent to `~factor(.) %>% fct_recode("(Missing)" = "0")`

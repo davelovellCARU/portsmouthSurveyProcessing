@@ -133,7 +133,19 @@ attenders %<>%
 attenders %<>% select(-Class2)
 ```
 
-Just reviewing the 2018 attenders report ^[O:/WCC/Learning/and/Development/Research/Archive/Complete/PROJECT/-/Portsmouth/2018/Reports/Portsmouth/attenders/survey/report/2018.pdf]. It looks like 'reason for joining' is reported either in terms of `class2` for all 'churched' attenders, or in terms of church background for the truly 'de/non-churched' (as well as 'grew up this fxC' people. Ethically dubious that we made some people fill in a question that didn't really apply to them. Anyhow the headline is that `Class2` is not a derived category, unless ignoring a response counts a derivation.
+Just reviewing the 2018 attenders report ^[O:/WCC/Learning/and/Development/Research/Archive/Complete/PROJECT/-/Portsmouth/2018/Reports/Portsmouth/attenders/survey/report/2018.pdf]. It looks like 'reason for joining' is reported either in terms of `class2` for all 'churched' attenders, or in terms of church background for the truly 'de/non-churched' (as well as 'grew up this fxC' people. Ethically dubious that we made some people fill in a question that didn't really apply to them. ~~Anyhow the headline is that `Class2` is not a derived category, unless ignoring a response counts a derivation.~~
+
+Here are the values for class2:
+
+|Transfer Reason|Class2|
+|---|---|
+|(simple)De/non or grew up here|0|
+|Part of the team sent to start this church|1|
+|Part of another church as well|2|
+|Moved to the area|3|
+|This church is better for me|4|
+|Family, friends or life patterns|5|
+|Simple non-churched|6|
 
 
 ```{r class2IsAFactorNow}

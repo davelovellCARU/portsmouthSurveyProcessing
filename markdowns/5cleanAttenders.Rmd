@@ -309,7 +309,7 @@ attenders %<>%
            fct_recode("moved" = "1",
                       "team" = "2",
                       "better" = "3",
-                      "grewUP" = "4",
+                      "grewUp" = "4",
                       "other" = "5") %>% 
              fct_explicit_na())
 # Drop ----------------------------------------

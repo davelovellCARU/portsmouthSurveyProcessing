@@ -107,7 +107,8 @@ Class 1 corresponds to 'church status' - one of:
                        "complexDe" = "3",
                        "copmlexNon" = "4",
                        "simpleDe" = "5",
-                       "simpleNon" = "6"))
+                       "simpleNon" = "6") %>% 
+            fct_explicit_na())
 
 # Drop original column, 'Class1' (with capital C)
 attenders %<>% select(-Class1)

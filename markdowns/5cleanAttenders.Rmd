@@ -85,6 +85,15 @@ attenders %>%
 
 Actually most of those seem worth keeping. `>10 years` can go, evidently a column derived from other data. Also what are `Class1` and `Class2`? 
 
+### >10 years
+
+This never comes up the 2018 report, and it doesn't correspond to any of the survey questions. 
+
+**Be gone!**
+```{r beGoneScrub}
+attenders %<>% select(-`>10Years`)
+```
+
 ### Class1
 
 Class 1 corresponds to 'church status' - one of:
@@ -165,7 +174,7 @@ attenders %<>%
 2. Those ticking 'I am part of a church as well as [fxc] for **question 6** are assigned `blending`
 3. Those who are 'churched' (excluding `grewUp`s) but not 'blending' are assigned another `class2` value, based on their response to **question 7**. Either
   a. Their response is automatically encoded as one of: `team`, `moved` or `better` based on the box they ticked.
-  b. Tickers of `because of a different reason (please specify)` are encoded as one of the above (if they are bad at surveys), or dropped into the catchall category (`family`) of "family, friends, or life patterns".
+  b. Tickers of `because of a different reason (please specify)` are encoded as one of the above (if they are bad at surveys), or dropped into the catch-all category (`family`) of "family, friends, or life patterns".
 
 ### fxC Names
 

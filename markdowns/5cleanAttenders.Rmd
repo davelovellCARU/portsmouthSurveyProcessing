@@ -395,3 +395,14 @@ attenders %<>%
               "statusAdult"),
             fct_drop)
 ```
+
+### YearStarted and YearReturned
+
+Let's have these as numerics
+
+```{r yearsMutation}
+attenders %<>%
+  mutate(yearStated = as.integer(YearStarted),
+         yearReturned = as.integer(YearReturned))
+
+attenders %<>% select(-YearStarted,-YearReturned) 

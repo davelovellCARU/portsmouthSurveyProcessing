@@ -460,3 +460,12 @@ attenders %<>%
 attenders %<>% select(-`Became Christian here?`)
 ```
 
+## Review
+
+Let's take a look at what's been achieved:
+
+```{r review}
+attenders %>% summarise_all(~ toString(sample(unique(.), 6, replace = TRUE))) %>% glimpse
+```
+
+Balls. We've got a '5' floating around in `higherEducation`, and a '4' inside `becameHere`. Just as well that we stopped using `fct_explicit_na`.

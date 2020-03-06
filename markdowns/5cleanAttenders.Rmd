@@ -230,11 +230,10 @@ attenders %<>%
 attenders %<>% select(-Gender)
 ```
 
-### Regularity
+### regularity
 
 Again, these vals are taken from the excel sheet in the footnote.
 
-### gender
 ```{r regularityRecode}
 # Recode (and rename) -------------------------
 attenders %<>%

@@ -315,3 +315,11 @@ attenders %<>%
 # Drop ----------------------------------------
 attenders %<>% select(-TransferReason)
 ```
+
+Okay. If `grewUp` is about 17% of all `transferReason`s then things are looking good. 
+
+```{r checkingTransferReason}
+attenders$transferReason %>% 
+  table %>% 
+  {round((./sum(.) * 100))}
+```

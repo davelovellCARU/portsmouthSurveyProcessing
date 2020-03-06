@@ -91,7 +91,7 @@ This never comes up the 2018 report, and it doesn't correspond to any of the sur
 
 **Be gone!**
 ```{r beGoneScrub}
-attenders %<>% select(-`>10Years`)
+attenders %<>% select(-`>10 Years`)
 ```
 
 ### Class1
@@ -206,4 +206,21 @@ attenders %<>%
 attenders %<>% select(-AgeGroup)
 ```
 
+### gender
 
+How are `prefer not to say`s treated in the processing? Hope their not made the same as `NA` (although probably fine if so).
+
+```{r genderGlimpse}
+attenders$gender %>% unique
+```
+```{r genderRecode}
+# Recode (and rename) -------------------------
+attenders %<>%
+  mutate(gender = 
+           Gender %>% 
+           factor %>% 
+           fct_recode("female" = "F",
+                      "male" = "M"))
+# Drop ----------------------------------------
+attenders %<>% select(-ResponseType)
+```

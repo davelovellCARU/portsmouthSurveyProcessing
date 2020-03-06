@@ -101,7 +101,7 @@ Counterintuitively, `Complex de-churched`, `Complex non-churched` and `Churched`
 
 Elspeth tells me that 'Class 1' is human derived. But I belive that, for 'uncomplicated' surveys (without weird written notes), it should be possible to derive these labels with a kind of 'black-box' technique, by matching new data to old and assigning the same `class1` value. Obviously `class1` is going to be renamed. 
 
-NB all this 'working out' is coming from consultation with my colleague Eslpeth and an investigation of the 'Overall attenders survey findings ^[O:/WCC/Learning and Development/Research/Archive/Complete PROJECT - Portsmouth 2018/Attenders survey]'
+NB all this 'working out' is coming from consultation with my colleague Eslpeth and an investigation of the 'Overall attenders survey findings' document ^[O:/WCC/Learning and Development/Research/Archive/Complete PROJECT - Portsmouth 2018/Attenders survey/Overall attenders survey findings.xlsx]
 
 ### Class2
 

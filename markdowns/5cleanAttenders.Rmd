@@ -296,4 +296,22 @@ attenders$churchBackground %>%
 
 Ah. This cannot yet be tested - it needs to be tested in conjuction with other responses (because `grewUp` responses need removing.)
 
+### transferReason
 
+Making the same assumptions as above
+
+```{r transferReasonRecode}
+# Recode (and rename) -------------------------
+attenders %<>%
+  mutate(transferReason = 
+           TransferReason %>% 
+           factor %>% 
+           fct_recode("moved" = "1",
+                      "team" = "2",
+                      "better" = "3",
+                      "grewUP" = "4",
+                      "other" = "5") %>% 
+             fct_explicit_na())
+# Drop ----------------------------------------
+attenders %<>% select(-TransferReason)
+```

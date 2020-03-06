@@ -211,7 +211,7 @@ attenders %<>% select(-AgeGroup)
 How are `prefer not to say`s treated in the processing? Hope their not made the same as `NA` (although probably fine if so).
 
 ```{r genderGlimpse}
-attenders$gender %>% unique
+attenders$Gender %>% unique
 ```
 ```{r genderRecode}
 # Recode (and rename) -------------------------

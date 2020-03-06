@@ -199,7 +199,7 @@ Age group is encoded strangely, mostly out a desire to be careful not to report 
 attenders %<>%
   mutate(ageGroup = 
            str_trim(AgeGroup) %>% 
-           str_remove("$5\\.") %>% #get rid of strange notation
+           str_remove("^5\\.") %>% #get rid of strange notation
            factor)
 # Drop ----------------------------------------
 attenders %<>% select(-AgeGroup)

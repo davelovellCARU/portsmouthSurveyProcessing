@@ -402,7 +402,9 @@ responses %<>%
            factor(levels = c("Voluntary", "Locally paid", "Stipendiary"),
                   ordered = TRUE),
          lead_time = 
-           lead_time %>% 
+           lead_time %>%
+           str_replace_all("-"," ") %>% 
+           str_to_title %>% 
            factor(levels = c("Spare Time", "Part Time", "Full Time"),
                   ordered = TRUE),
          dive_typicality = 

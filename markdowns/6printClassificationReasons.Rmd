@@ -19,7 +19,7 @@ But there's a catch - some respondents were classified in a particular way becau
 
 We want to be consistent with past practise, so it's important to understand how these cases were processed. Gladly, the processors of this data left plentiful notes. This markdown is just a printing of those notes. 
 
-```{r readInData}
+```{r readInData, message = FALSE, warning = FALSE}
 readRDS(here::here("data/generalRdats/attenders2018NoUnderFives.rdat")) ->
   attenders
 ```

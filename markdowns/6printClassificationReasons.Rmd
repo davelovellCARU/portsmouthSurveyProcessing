@@ -24,8 +24,27 @@ readRDS(here::here("data/generalRdats/attenders2018NoUnderFives.rdat")) ->
   attenders
 ```
 
+For this exercise, we will only need the `class1`, `class2` and `note` fields.
+
+```{r selectingClassesandNote}
+attenders %<>% select(class1, class2, note)
+```
+
 We're only interested in attenders with `note` data (shorthand for 'classification notes' in the original data entry interface):
 
 ```{r filterOutNoNotes}
 attenders %<>% filter(is.na(note))
 ```
+
+## All permutations of Class
+
+Let's see what permutations of classification data exist within the filtered tibble:
+
+```{r seePermutations}
+attenders %>% 
+  group_by(class1, class2) %>% 
+  summarise %>% 
+  arrange
+```
+
+Cool. These will be the subtitles for the rest of this file.

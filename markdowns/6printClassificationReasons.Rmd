@@ -9,6 +9,8 @@ output: html_document
 library("here")
 library("magrittr")
 library("dplyr")
+library("purrr")
+library("stringr")
 ```
 
 ## Attenders Classification Reasons
@@ -33,18 +35,39 @@ attenders %<>% select(class1, class2, note)
 We're only interested in attenders with `note` data (shorthand for 'classification notes' in the original data entry interface):
 
 ```{r filterOutNoNotes}
-attenders %<>% filter(is.na(note))
+attenders %<>% filter(!is.na(note))
 ```
 
-## All permutations of Class
+## View All Notes
 
-Let's see what permutations of classification data exist within the filtered tibble:
 
-```{r seePermutations}
-attenders %>% 
-  group_by(class1, class2) %>% 
-  summarise %>% 
-  arrange
+
+```{r seePermutations, results = "asis"}
+
+### Get rid of these:
+
+attenders %<>% 
+  filter(note %>% str_to_lower %>% str_detect("^survey monkey response #", negate = TRUE))
+
+attenders %>%
+  mutate(note = 
+           paste0("- ",note),
+         class2 = as.character(class2) %>% 
+           {paste0("#### ",.)},
+         class1 = as.character(class1) %>% 
+           {paste0("### ",.)}) %>% 
+  group_by(class1,class2) %>% 
+  summarise(note = paste(unique(note), collapse = "\n")) %>% 
+  mutate(note = paste0("\n", note, "\n")) %>% 
+  ungroup() %>% 
+  transmute(class1 = class1,
+            content = paste0("\n", class2,"\n", note, "\n")) %>% 
+  group_by(class1) %>% 
+  summarise(content = paste(content, collapse = "", sep = "")) %>% 
+  ungroup() %>% 
+  transmute(content = paste(class1, "\n", content, "\n")) %>% 
+  pull %>% 
+  paste(collapse = "") %>% 
+  writeLines
 ```
 
-Cool. These will be the subtitles for the rest of this file.

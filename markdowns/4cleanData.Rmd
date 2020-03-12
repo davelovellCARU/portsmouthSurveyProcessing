@@ -670,8 +670,10 @@ Realised I needed this when I wanted to save a small .rdat of lat-longs (from ad
 ## Why hexmode?
 ## For this many rows, it conveniently standardised column length (1 is "01", 200 is "c8" - and hexmode returns all with same length (.ie not c("1","c8")))
 ## Plus it makes the data less transparently numerical, which means it's less likely that somebody will impute order to it.
+
+## Pasting 'r' to stop excel from coercing in unpredictable ways
 responses %<>%
-  mutate(responseId = paste0(as.hexmode(1:nrow(responses)),as.character(tranche %>% str_sub(-2,-1)))) 
+  mutate(responseId = paste0("r",as.hexmode(1:nrow(responses)),as.character(tranche %>% str_sub(-2,-1)))) 
 ```
 
 ## Save RDS

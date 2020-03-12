@@ -673,7 +673,8 @@ Realised I needed this when I wanted to save a small .rdat of lat-longs (from ad
 
 ## Pasting 'r' to stop excel from coercing in unpredictable ways
 responses %<>%
-  mutate(responseId = paste0("r",as.hexmode(1:nrow(responses)),as.character(tranche %>% str_sub(-2,-1)))) 
+  mutate(responseId = paste0("r",as.hexmode(1:nrow(responses)),as.character(tranche %>% str_sub(-2,-1))) %>% 
+           as.factor) 
 ```
 
 ## Save RDS

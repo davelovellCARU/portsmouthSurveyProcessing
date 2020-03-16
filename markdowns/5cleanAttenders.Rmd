@@ -203,7 +203,12 @@ attenders %<>%
   mutate(ageGroup = 
            str_trim(AgeGroup) %>% 
            str_remove("^5\\.") %>% #get rid of strange notation
-           factor)
+           {replace(.,str_detect(., "^[0-5]$"),"0-5")} %>% 
+           {replace(., str_detect(., "^([6-9]|(10))$"), "6-10")} %>% 
+           factor(levels = c("0-5", "6-10", "11-15", "16-17", "18-24",
+                             "25-29", "30-34", "35-44", "45-54",
+                             "55-64", "65-74", "75+"),
+                  ordered = TRUE))
 # Drop ----------------------------------------
 attenders %<>% select(-AgeGroup)
 ```
@@ -561,13 +566,13 @@ Also let's save one with no under fives in;
 
 ```{r saveNoUnderFives}
 saveRDS(attenders %>% 
-          filter(!(ageGroup %in% c("0","1","2","3","4"))),
+          filter(!(ageGroup %in% "0-5")),
         here::here("data/generalRdats/attenders2018NoUnderFives.rdat"))
 
 # Also csv
 
 write.csv(attenders %>% 
-            filter(!(ageGroup %in% c("0","1","3","2","4"))),
+          filter(!(ageGroup %in% "0-5")),
           here::here("data/attendersNoUnderFives.csv"),
           row.names = FALSE)
 ```

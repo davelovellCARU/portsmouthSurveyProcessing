@@ -523,6 +523,16 @@ attenders %<>%
          "note" = "Notes")
 ```
 
+## Re-class 
+
+Also need to make the Ids into factors
+
+```{r reclassIds}
+attenders %<>%
+  mutate(responseId %<>% factor,
+         plantId %<>% factor)
+```
+
 
 Also going to drop responseRef - it's a unique identifier for responses within  a particular plant, but it's redundant because 
 

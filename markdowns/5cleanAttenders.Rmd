@@ -534,8 +534,8 @@ Also need to make the Ids into factors
 
 ```{r reclassIds}
 attenders %<>%
-  mutate(responseId %<>% factor,
-         plantId %<>% factor)
+  mutate(responseId = factor(plantId),
+         plantId = factor(plantId))
 ```
 
 

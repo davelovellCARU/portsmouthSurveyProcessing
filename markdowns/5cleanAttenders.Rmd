@@ -561,8 +561,7 @@ Also need to make the Ids into factors
 
 ```{r reclassIds}
 attenders %<>%
-  mutate(responseId = factor(plantId),
-         plantId = factor(plantId))
+  mutate(responseId = factor(responseId))
 ```
 
 
@@ -592,9 +591,10 @@ looking good!
 These are in another table
 ```{r joinFxcNames}
 
-attenders %<>% left_join(plantNames %>% 
-                           mutate(plantId = factor(plantId)),
+attenders %<>% left_join(plantNames,
                          by = "plantId")
+
+attenders %<>% mutate(plantId = factor(plantId))
 
 any(is.na(attenders$fxcName))
 
